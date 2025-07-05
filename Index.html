@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Showcase | Manish Patil</title>
+    <meta name="description" content="A showcase of projects created by Manish Patil">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Color Palette */
+        :root {
+            --primary-blue: #1E88E5;
+            --primary-blue-dark: #1565C0;
+            --jet-black: #121212;
+            --jet-black-light: #1a1a1a;
+            --vibrant-orange: #FF6F00;
+            --vibrant-orange-dark: #E65100;
+            --white: #FFFFFF;
+            --card-bg: #1f1f1f;
+            --text-secondary: #b0b0b0;
+            --success-green: #4CAF50;
+            --error-red: #F44336;
+            --transition-fast: 0.2s;
+            --transition-medium: 0.3s;
+            --transition-slow: 0.5s;
+        }
+
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--jet-black);
+            color: var(--white);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Skip to content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top var(--transition-fast);
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header & Search */
+        .header-container {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 40px;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .header-container h1 {
+            font-size: 2.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-container p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #searchBar {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            font-size: 1rem;
+            border: 2px solid var(--primary-blue);
+            border-radius: 25px;
+            background-color: var(--card-bg);
+            color: var(--white);
+            outline: none;
+            transition: all var(--transition-medium) ease;
+        }
+
+        #searchBar:focus {
+            border-color: var(--vibrant-orange);
+            box-shadow: 0 0 10px rgba(255, 111, 0, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        /* Project Grid */
+        #projectGridContainer {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        #projectGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        /* Project Card */
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-medium) ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            border: 1px solid #333;
+            position: relative;
+            height: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(30, 136, 229, 0.2), 0 0 15px rgba(255, 111, 0, 0.1);
+            border-color: var(--primary-blue);
+        }
+
+        .project-card:focus-within {
+            outline: 2px solid var(--vibrant-orange);
+            outline-offset: 2px;
+        }
+
+        .project-card .project-icon-container {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-medium) ease;
+        }
+        
+        .project-card:hover .project-icon-container {
+            background-color: var(--primary-blue-dark);
+        }
+
+        .project-card .project-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform var(--transition-medium) ease;
+        }
+
+        .project-card:hover .project-icon {
+            transform: scale(1.1);
+        }
+
+        .project-card .project-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 5px;
+            word-break: break-word;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .project-card .project-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            text-indent: -9999px;
+        }
+
+        /* Loading animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Message for loading/no results */
+        #message {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .message-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+        }
+
+        /* Notification toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: var(--card-bg);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all var(--transition-medium) ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success-green);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error-red);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        footer a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: color var(--transition-fast) ease;
+        }
+
+        footer a:hover {
+            color: var(--vibrant-orange);
+            text-decoration: underline;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            transition: all var(--transition-fast) ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-container h1 {
+                font-size: 2.2rem;
+            }
+            #projectGrid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+            .project-card {
+                padding: 15px;
+            }
+            .project-card .project-icon-container {
+                width: 80px;
+                height: 80px;
+            }
+            .project-card .project-name {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            .header-container h1 {
+                font-size: 1.8rem;
+            }
+            .header-container p {
+                font-size: 1rem;
+            }
+            #searchBar {
+                padding: 10px 15px 10px 40px;
+                font-size: 0.9rem;
+            }
+            .search-icon {
+                left: 12px;
+                font-size: 0.9rem;
+            }
+            #projectGrid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .project-card .project-icon-container {
+                width: 70px;
+                height: 70px;
+            }
+            .project-card .project-name {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <div class="header-container">
+        <h1>My Project Portfolio</h1>
+        <p>Explore a collection of my work and creations. Each project represents a unique challenge and learning experience.</p>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="search" id="searchBar" placeholder="Search projects by name..." aria-label="Search projects">
+        </div>
+    </div>
+
+    <main id="main-content">
+        <div id="projectGridContainer">
+            <div id="projectGrid">
+                <!-- Projects will be injected here by JavaScript -->
+            </div>
+            <div id="message">
+                <div class="loading-spinner"></div>
+                <p>Loading projects...</p>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>© <span id="currentYear"></span> Manish Patil. All projects built with passion and dedication.</p>
+        <div class="social-links">
+            <a href="https://github.com/yourusername" aria-label="GitHub profile"><i class="fab fa-github"></i></a>
+            <a href="https://linkedin.com/in/yourprofile" aria-label="LinkedIn profile"><i class="fab fa-linkedin"></i></a>
+            <a href="mailto:your.email@example.com" aria-label="Send email"><i class="fas fa-envelope"></i></a>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <script>
+        // Configuration
+        const config = {
+            csvUrl: 'https://docs.google.com/spreadsheets/d/13ZV6BXtXKp9aQCKc0OHQoLFCRrif32zvx4khFc4bR9w/export?format=csv',
+            fallbackIcon: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4bb.svg', // laptop emoji
+            cacheDuration: 60 * 60 * 1000, // 1 hour cache
+            socialLinks: {
+                github: 'https://github.com/yourusername',
+                linkedin: 'https://linkedin.com/in/yourprofile',
+                email: 'mailto:your.email@example.com'
+            }
+        };
+
+        // DOM Elements
+        const projectGrid = document.getElementById('projectGrid');
+        const searchBar = document.getElementById('searchBar');
+        const messageElement = document.getElementById('message');
+        const toastElement = document.getElementById('toast');
+        const currentYearElement = document.getElementById('currentYear');
+        
+        // State
+        let allProjects = [];
+        let cachedProjects = null;
+        let lastFetchTime = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            currentYearElement.textContent = new Date().getFullYear();
+            setupSocialLinks();
+            fetchProjects();
+            setupEventListeners();
+        });
+
+        // Set up social links
+        function setupSocialLinks() {
+            const githubLink = document.querySelector('.social-links a[aria-label="GitHub profile"]');
+            const linkedinLink = document.querySelector('.social-links a[aria-label="LinkedIn profile"]');
+            const emailLink = document.querySelector('.social-links a[aria-label="Send email"]');
+            
+            if (githubLink) githubLink.href = config.socialLinks.github;
+            if (linkedinLink) linkedinLink.href = config.socialLinks.linkedin;
+            if (emailLink) emailLink.href = config.socialLinks.email;
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            searchBar.addEventListener('input', debounce(handleSearch, 300));
+            
+            // Keyboard navigation for project cards
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    searchBar.value = '';
+                    handleSearch();
+                    searchBar.focus();
+                }
+            });
+        }
+
+        // Debounce function for search
+        function debounce(func, delay) {
+            let timeoutId;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+        // Fetch projects with caching
+        async function fetchProjects() {
+            const now = Date.now();
+            
+            // Check cache first
+            if (cachedProjects && now - lastFetchTime < config.cacheDuration) {
+                allProjects = cachedProjects;
+                displayProjects(allProjects);
+                showToast('Loaded projects from cache', 'success');
+                return;
+            }
+
+            showLoading(true);
+            
+            try {
+                const response = await fetch(config.csvUrl);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const csvText = await response.text();
+                allProjects = parseCSV(csvText);
+                
+                if (allProjects.length > 0) {
+                    // Update cache
+                    cachedProjects = allProjects;
+                    lastFetchTime = now;
+                    
+                    displayProjects(allProjects);
+                    showToast('Projects loaded successfully', 'success');
+                } else {
+                    showMessage('No projects found in the database.', 'info');
+                }
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+                
+                // If we have cached projects, use them
+                if (cachedProjects) {
+                    allProjects = cachedProjects;
+                    displayProjects(allProjects);
+                    showToast('Using cached projects - network error', 'error');
+                } else {
+                    showMessage('Failed to load projects. Please check your connection and try again.', 'error');
+                }
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Parse CSV data
+        function parseCSV(csvText) {
+            return csvText.trim().split('\n').map(line => {
+                const [name, icon, link] = line.split(',').map(part => part.trim());
+                
+                return { 
+                    name: name || 'Unnamed Project', 
+                    icon: icon || config.fallbackIcon,
+                    link: link || '#',
+                    searchText: name.toLowerCase() // Pre-compute for faster searching
+                };
+            }).filter(project => project.name && project.link);
+        }
+
+        // Display projects in grid
+        function displayProjects(projects) {
+            projectGrid.innerHTML = '';
+
+            if (projects.length === 0) {
+                showMessage('No projects match your search.', 'info');
+                return;
+            }
+
+            projects.forEach(project => {
+                const card = document.createElement('article');
+                card.className = 'project-card';
+                card.setAttribute('role', 'article');
+                card.setAttribute('aria-labelledby', `project-${project.name.replace(/\s+/g, '-')}-title`);
+
+                // Icon container
+                const iconContainer = document.createElement('div');
+                iconContainer.className = 'project-icon-container';
+                
+                const iconImg = document.createElement('img');
+                iconImg.className = 'project-icon';
+                iconImg.src = project.icon;
+                iconImg.alt = '';
+                iconImg.loading = 'lazy';
+                iconImg.onerror = () => {
+                    iconImg.src = config.fallbackIcon;
+                    iconImg.alt = 'Default project icon';
+                };
+                iconContainer.appendChild(iconImg);
+
+                // Project name
+                const nameEl = document.createElement('h3');
+                nameEl.className = 'project-name';
+                nameEl.id = `project-${project.name.replace(/\s+/g, '-')}-title`;
+                nameEl.textContent = project.name;
+
+                // Hidden link for better accessibility
+                const link = document.createElement('a');
+                link.className = 'project-link';
+                link.href = project.link;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = `View ${project.name} project`;
+
+                // Assemble card
+                card.appendChild(iconContainer);
+                card.appendChild(nameEl);
+                card.appendChild(link);
+
+                // Click handler
+                card.addEventListener('click', () => {
+                    window.open(project.link, '_blank', 'noopener,noreferrer');
+                });
+
+                projectGrid.appendChild(card);
+            });
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = searchBar.value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                displayProjects(allProjects);
+                return;
+            }
+
+            const filteredProjects = allProjects.filter(project => 
+                project.searchText.includes(searchTerm)
+            );
+            
+            displayProjects(filteredProjects);
+        }
+
+        // Show loading state
+        function showLoading(isLoading) {
+            if (isLoading) {
+                messageElement.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <p>Loading projects...</p>
+                `;
+                messageElement.style.display = 'flex';
+            } else {
+                messageElement.style.display = 'none';
+            }
+        }
+
+        // Show message
+        function showMessage(text, type = 'info') {
+            const icons = {
+                info: 'fas fa-info-circle',
+                error: 'fas fa-exclamation-circle',
+                success: 'fas fa-check-circle'
+            };
+            
+            messageElement.innerHTML = `
+                <i class="${icons[type]} message-icon"></i>
+                <p>${text}</p>
+            `;
+            messageElement.style.display = 'flex';
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const icons = {
+                info: 'fas fa-info-circle',
+                error: 'fas fa-exclamation-circle',
+                success: 'fas fa-check-circle'
+            };
+            
+            toastElement.innerHTML = `
+                <i class="${icons[type]}"></i>
+                <span>${message}</span>
+            `;
+            toastElement.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toastElement.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
