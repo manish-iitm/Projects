@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate HTML Editor</title>
+    
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --sidebar-bg: #f5f5f5;
+            --border-color: #ddd;
+            --button-bg: white;
+            --button-hover: #eee;
+            --editor-bg: #282a36;
+            --editor-text: #f8f8f2;
+            --header-bg: #04AA6D;
+            --header-text: white;
+            --preview-bg: white;
+            --toolbar-bg: #E7E9EB;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        #app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        #header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: #059862;
+        }
+        
+        .btn i {
+            font-size: 0.9em;
+        }
+        
+        #mobile-menu-toggle {
+            display: none;
+            padding: 12px;
+            background: var(--sidebar-bg);
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        #view {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        #sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            font-size: 1.2rem;
+            margin: 10px 0 25px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        #editor-tools {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .tool-btn {
+            margin-bottom: 0;
+            padding: 10px 12px;
+            background: var(--button-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.2s;
+        }
+        
+        .tool-btn i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .tool-btn:hover {
+            background: var(--button-hover);
+        }
+        
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        #split-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .panel {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+        }
+        
+        .panel-header {
+            background-color: var(--toolbar-bg);
+            padding: 8px 15px;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .panel-title {
+            font-weight: bold;
+        }
+        
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .panel-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: #666;
+            padding: 5px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+        
+        .panel-action-btn:hover {
+            color: #333;
+            background-color: rgba(0,0,0,0.1);
+        }
+        
+        .panel-content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .CodeMirror {
+            height: 100% !important;
+            width: 100% !important;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        #preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: var(--preview-bg);
+        }
+        
+        .copyright {
+            margin-top: auto;
+            padding-top: 25px;
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        /* Gutter styling for split view */
+        .gutter {
+            background-color: var(--toolbar-bg);
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+        
+        .gutter.gutter-horizontal {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+            cursor: col-resize;
+        }
+        
+        .gutter.gutter-vertical {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+            cursor: row-resize;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            #mobile-menu-toggle {
+                display: block;
+                position: absolute;
+                top: 56px; /* Adjust based on header height */
+                left: 0;
+                z-index: 101;
+                border: 1px solid var(--border-color);
+                border-left: none;
+                border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+                background-color: var(--sidebar-bg);
+            }
+            
+            #sidebar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 100;
+                transform: translateX(-100%);
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            }
+            
+            #sidebar.open {
+                transform: translateX(0);
+            }
+            
+            #view {
+                position: relative;
+            }
+
+            #main-content {
+                padding-top: 45px; /* space for mobile menu toggle */
+            }
+
+            #split-container {
+                flex-direction: column;
+            }
+        }
+        
+        /* Dark theme */
+        body.dark-theme {
+            --sidebar-bg: #2d2d2d;
+            --border-color: #444;
+            --button-bg: #333;
+            --button-hover: #444;
+            --header-bg: #38444d;
+            --toolbar-bg: #38444d;
+            --preview-bg: #1e1e1e;
+        }
+
+        body.dark-theme .CodeMirror {
+            background: var(--editor-bg);
+            color: var(--editor-text);
+        }
+        
+        body.dark-theme .tool-btn {
+            color: #eee;
+            border-color: #444;
+        }
+        
+        body.dark-theme .panel-header {
+             color: #eee;
+        }
+
+        body.dark-theme .panel-action-btn {
+            color: #aaa;
+        }
+        
+        body.dark-theme .panel-action-btn:hover {
+            color: #ddd;
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        body.dark-theme .copyright {
+            color: #999;
+        }
+        
+        body.dark-theme #sidebar {
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+        }
+        
+        /* Fullscreen mode */
+        body.fullscreen {
+             overflow: hidden;
+        }
+        
+        #app-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            height: 100%;
+        }
+
+        #app-container.fullscreen #sidebar,
+        #app-container.fullscreen #header,
+        #app-container.fullscreen #mobile-menu-toggle {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <div id="header">
+            <h1>Ultimate HTML Editor</h1>
+            <div class="header-buttons">
+                <button id="themeToggle" class="btn">
+                    <i class="fas fa-moon"></i> Theme
+                </button>
+                <button id="runButton" class="btn">
+                    <i class="fas fa-play"></i> Run
+                </button>
+            </div>
+        </div>
+        
+        <div id="view">
+             <button id="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div id="sidebar">
+                <h2 class="sidebar-header">Editor Tools</h2>
+                <div id="editor-tools">
+                    <button id="fullPreviewBtn" class="tool-btn">
+                        <i class="fas fa-external-link-alt"></i> Full Preview
+                    </button>
+                    <button id="formatCodeBtn" class="tool-btn">
+                        <i class="fas fa-indent"></i> Format Code
+                    </button>
+                    <button id="toggleLayoutBtn" class="tool-btn">
+                        <i class="fas fa-exchange-alt"></i> Toggle Layout
+                    </button>
+                    <button id="insertSampleBtn" class="tool-btn">
+                        <i class="fas fa-file-code"></i> Insert Sample
+                    </button>
+                    <button id="clearEditorBtn" class="tool-btn">
+                        <i class="far fa-file"></i> Clear Editor
+                    </button>
+                    <button id="importHTMLBtn" class="tool-btn">
+                        <i class="fas fa-upload"></i> Import HTML
+                    </button>
+                    <button id="exportHTMLBtn" class="tool-btn">
+                        <i class="fas fa-download"></i> Export HTML
+                    </button>
+                    <button id="fullscreenBtn" class="tool-btn">
+                        <i class="fas fa-expand"></i> Fullscreen
+                    </button>
+                    <input type="file" id="fileInput" accept=".html,.htm,.txt" style="display:none">
+                </div>
+                <div class="copyright">
+                    © 2025 Ultimate HTML Editor<br>
+                    Works offline<br>
+                    Ctrl+Enter to Run
+                </div>
+            </div>
+            
+            <div id="main-content">
+                <div id="split-container">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <span class="panel-title">Editor</span>
+                            <div class="panel-actions">
+                                <button id="increaseFontBtn" class="panel-action-btn" title="Increase font size">
+                                    <i class="fas fa-search-plus"></i>
+                                </button>
+                                <button id="decreaseFontBtn" class="panel-action-btn" title="Decrease font size">
+                                    <i class="fas fa-search-minus"></i>
+                                </button>
+                                <button id="wordWrapBtn" class="panel-action-btn" title="Toggle word wrap">
+                                    <i class="fas fa-text-width"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="panel-content">
+                            <textarea id="editor"><!DOCTYPE html>
+<html>
+<head>
+    <title>My HTML Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #04AA6D;
+            text-align: center;
+        }
+        button {
+            background-color: #04AA6D;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #059862;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the HTML Editor</h1>
+        <p>Edit this HTML to see live changes in the preview panel.</p>
+        <button onclick="alert('Hello World!')">Click Me</button>
+    </div>
+</body>
+</html></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="panel">
+                        <div class="panel-header">
+                            <span class="panel-title">Live Preview</span>
+                            <div class="panel-actions">
+                                <button id="refreshPreviewBtn" class="panel-action-btn" title="Refresh preview">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button id="openInNewTabBtn" class="panel-action-btn" title="Open in new tab">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="panel-content">
+                            <iframe id="preview-frame" title="Live HTML Preview" sandbox="allow-scripts allow-modals allow-forms allow-same-origin"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closetag.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/xml-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/display/autorefresh.min.js"></script>
+    
+    <!-- Split.js for resizable panels -->
+    <script src="https://cdn.jsdelivr.net/npm/split.js@1.6.5/dist/split.min.js"></script>
+    
+    <!-- JS Beautifier -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+        
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize CodeMirror editor
+        const editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+            mode: 'htmlmixed',
+            theme: 'dracula',
+            lineNumbers: true,
+            autoCloseTags: true,
+            autoCloseBrackets: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+            lineWrapping: false,
+            indentUnit: 4,
+            tabSize: 4,
+            extraKeys: {
+                "Ctrl-Enter": updatePreview,
+                "Ctrl-Space": "autocomplete",
+                "Ctrl-/": "toggleComment",
+                "Ctrl-Alt-F": formatCode,
+                "Ctrl-S": (cm) => { 
+                    exportHTML();
+                    return false;
+                }
+            },
+            autoRefresh: true
+        });
+
+        // --- DOM Element References ---
+        const appContainer = document.getElementById('app-container');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const previewFrame = document.getElementById('preview-frame');
+        const fileInput = document.getElementById('fileInput');
+
+        // --- Split View Setup ---
+        let splitInstance;
+        let isHorizontal = window.innerWidth > 768;
+
+        function setupSplitView() {
+            if (splitInstance) {
+                splitInstance.destroy();
+            }
+            
+            const panels = ['#split-container > .panel:nth-child(1)', '#split-container > .panel:nth-child(2)'];
+            document.getElementById('split-container').style.flexDirection = isHorizontal ? 'row' : 'column';
+            const gutter = document.querySelector('.gutter');
+            if(gutter) gutter.style.display = '';
+
+            splitInstance = Split(panels, {
+                sizes: [50, 50],
+                minSize: 100,
+                gutterSize: 8,
+                cursor: isHorizontal ? 'col-resize' : 'row-resize',
+                direction: isHorizontal ? 'horizontal' : 'vertical'
+            });
+        }
+        
+        // --- Core Editor Functions ---
+
+        function updatePreview() {
+            const code = editor.getValue();
+            const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            
+            previewDoc.open();
+            previewDoc.write(code);
+            previewDoc.close();
+        }
+
+        function openFullPreview() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+            URL.revokeObjectURL(url); // Clean up the object URL
+        }
+
+        function formatCode() {
+            const unformatted = editor.getValue();
+            // *** THIS IS THE MAIN FIX ***
+            // The function is js_beautify.html, not html_beautify
+            const formatted = js_beautify.html(unformatted, {
+                indent_size: 4,
+                indent_char: ' ',
+                max_preserve_newlines: 2,
+                preserve_newlines: true,
+                indent_scripts: 'normal',
+                brace_style: 'collapse',
+                wrap_line_length: 0
+            });
+            editor.setValue(formatted);
+        }
+
+        function insertSample() {
+            const sampleCode = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Responsive Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        h1 { color: #04AA6D; }
+    </style>
+</head>
+<body>
+    <h1>Sample Responsive Page</h1>
+    <div class="card">
+        <h2>Card 1</h2>
+        <p>This is some sample content. Edit the HTML to see it change!</p>
+        <button onclick="alert('Hello from Card 1!')">Click Me</button>
+    </div>
+</body>
+</html>`;
+            editor.setValue(sampleCode);
+        }
+
+        function clearEditor() {
+            if (confirm('Are you sure you want to clear the editor?')) {
+                editor.setValue('');
+            }
+        }
+
+        function importHTML() {
+            fileInput.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = event => {
+                    editor.setValue(event.target.result);
+                };
+                reader.onerror = () => {
+                    alert('Error reading file');
+                };
+                reader.readAsText(file);
+                fileInput.value = ''; // Reset for next import
+            };
+            fileInput.click();
+        }
+
+        function exportHTML() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'document.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                appContainer.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message} (${err.name})`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        document.addEventListener('fullscreenchange', () => {
+            appContainer.classList.toggle('fullscreen', !!document.fullscreenElement);
+        });
+
+        function changeFontSize(change) {
+            const wrapper = editor.getWrapperElement();
+            const currentSize = parseInt(window.getComputedStyle(wrapper).fontSize) || 14;
+            const newSize = Math.max(10, Math.min(24, currentSize + change));
+            wrapper.style.fontSize = newSize + 'px';
+            editor.refresh(); // Important for CodeMirror to recalculate layout
+            localStorage.setItem('editorFontSize', newSize);
+        }
+
+        function toggleWordWrap() {
+            const newValue = !editor.getOption('lineWrapping');
+            editor.setOption('lineWrapping', newValue);
+            localStorage.setItem('editorWordWrap', newValue);
+            document.getElementById('wordWrapBtn').title = newValue ? 'Disable word wrap' : 'Enable word wrap';
+        }
+
+        function toggleTheme() {
+            const isDark = document.body.classList.toggle('dark-theme');
+            editor.setOption('theme', isDark ? 'dracula' : 'default');
+            localStorage.setItem('editorTheme', isDark ? 'dark' : 'light');
+        }
+        
+        function toggleOrientation() {
+            isHorizontal = !isHorizontal;
+            setupSplitView();
+        }
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        }
+
+        function loadPreferences() {
+            if (localStorage.getItem('editorTheme') === 'dark') {
+                document.body.classList.add('dark-theme');
+                editor.setOption('theme', 'dracula');
+            } else {
+                 document.body.classList.remove('dark-theme');
+                 editor.setOption('theme', 'default');
+            }
+
+            const savedFontSize = localStorage.getItem('editorFontSize');
+            if (savedFontSize) {
+                editor.getWrapperElement().style.fontSize = savedFontSize + 'px';
+                editor.refresh();
+            }
+
+            if (localStorage.getItem('editorWordWrap') === 'true') {
+                editor.setOption('lineWrapping', true);
+                document.getElementById('wordWrapBtn').title = 'Disable word wrap';
+            }
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('runButton').addEventListener('click', updatePreview);
+        document.getElementById('fullPreviewBtn').addEventListener('click', openFullPreview);
+        document.getElementById('formatCodeBtn').addEventListener('click', formatCode);
+        document.getElementById('toggleLayoutBtn').addEventListener('click', toggleOrientation);
+        document.getElementById('insertSampleBtn').addEventListener('click', insertSample);
+        document.getElementById('clearEditorBtn').addEventListener('click', clearEditor);
+        document.getElementById('importHTMLBtn').addEventListener('click', importHTML);
+        document.getElementById('exportHTMLBtn').addEventListener('click', exportHTML);
+        document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+        document.getElementById('refreshPreviewBtn').addEventListener('click', updatePreview);
+        document.getElementById('openInNewTabBtn').addEventListener('click', openFullPreview);
+        document.getElementById('increaseFontBtn').addEventListener('click', () => changeFontSize(1));
+        document.getElementById('decreaseFontBtn').addEventListener('click', () => changeFontSize(-1));
+        document.getElementById('wordWrapBtn').addEventListener('click', toggleWordWrap);
+        
+        mobileMenuToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); // prevent document click listener from closing it immediately
+            sidebar.classList.toggle('open');
+        });
+
+        window.addEventListener('resize', debounce(() => {
+            const shouldBeHorizontal = window.innerWidth > 768;
+            if (shouldBeHorizontal !== isHorizontal) {
+                isHorizontal = shouldBeHorizontal;
+                setupSplitView();
+            }
+        }, 150));
+        
+        document.addEventListener('click', (e) => {
+            if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
+                 sidebar.classList.remove('open');
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                exportHTML();
+            }
+        });
+        
+        editor.on('change', debounce(updatePreview, 400));
+        
+        // --- Initial Load ---
+        setupSplitView();
+        loadPreferences();
+        updatePreview();
+        editor.focus();
+    });
+    </script>
+</body>
+</html>
