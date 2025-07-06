@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon | Under Development</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Content Section */
+        .content {
+            width: 100%;
+            padding: clamp(2rem, 5vw, 6rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            order: 2;
+        }
+        
+        .badge {
+            display: inline-block;
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            width: fit-content;
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        p {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            color: var(--gray);
+            margin-bottom: 2rem;
+            max-width: 90%;
+        }
+        
+        /* Visual Section */
+        .visual {
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 50vh;
+            order: 1;
+        }
+        
+        .visual::before {
+            content: '';
+            position: absolute;
+            width: min(60vw, 300px);
+            height: min(60vw, 300px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            top: min(-10vw, -50px);
+            right: min(-10vw, -50px);
+        }
+        
+        .visual::after {
+            content: '';
+            position: absolute;
+            width: min(40vw, 200px);
+            height: min(40vw, 200px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            bottom: min(-5vw, -30px);
+            right: min(20vw, 100px);
+        }
+        
+        .code-animation {
+            width: 100%;
+            max-width: min(90vw, 600px);
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        
+        .code-animation img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 65%;
+            background: var(--primary);
+            border-radius: 3px;
+            animation: progress 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes progress {
+            0% { width: 65%; }
+            100% { width: 75%; }
+        }
+        
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .social-links a {
+            color: var(--gray);
+            transition: var(--transition);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Countdown (optional) */
+        .countdown {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .countdown-item {
+            text-align: center;
+        }
+        
+        .countdown-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .countdown-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+        
+        /* Email Form (optional) */
+        .email-form {
+            display: flex;
+            max-width: 400px;
+            margin-bottom: 2rem;
+        }
+        
+        .email-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray);
+            border-radius: 6px 0 0 6px;
+            font-family: inherit;
+        }
+        
+        .email-submit {
+            padding: 0 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .email-submit:hover {
+            background: #4f46e5;
+        }
+        
+        /* Tablet Layout (768px and up) */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+            
+            .content {
+                width: 50%;
+                order: 1;
+            }
+            
+            .visual {
+                width: 50%;
+                min-height: 100vh;
+                order: 2;
+            }
+            
+            p {
+                max-width: 80%;
+            }
+        }
+        
+        /* Large Desktop Layout (1200px and up) */
+        @media (min-width: 1200px) {
+            .content {
+                padding: 6rem;
+            }
+            
+            .visual {
+                padding: 4rem;
+            }
+        }
+        
+        /* Very Small Mobile Devices (under 360px) */
+        @media (max-width: 360px) {
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .visual {
+                padding: 1.5rem;
+                min-height: 40vh;
+            }
+            
+            .social-links {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <span class="badge">UNDER DEVELOPMENT</span>
+            <h1>Website Under Construction</h1>
+            <p>I'm working hard to build something amazing. Please check back soon for updates!</p>
+            
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span>Development Progress</span>
+                    <span>65%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+            </div>
+            
+            <!-- Optional Countdown Timer -->
+            <!--
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number">14</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number">06</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number">45</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+            </div>
+            -->
+            
+            <!-- Optional Email Signup -->
+            <!--
+            <form class="email-form">
+                <input type="email" class="email-input" placeholder="Enter your email" required>
+                <button type="submit" class="email-submit">Notify Me</button>
+            </form>
+            -->
+            
+            <div class="social-links">
+                <a href="#" target="_blank">Twitter</a>
+                <a href="#" target="_blank">GitHub</a>
+                <a href="#" target="_blank">LinkedIn</a>
+                <a href="#" target="_blank">Instagram</a>
+            </div>
+        </div>
+        
+        <div class="visual">
+            <div class="code-animation">
+                <img src="https://i.giphy.com/media/2IudUHdI075HL02Pkk/giphy.webp" alt="Developer coding animation">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
