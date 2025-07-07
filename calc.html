@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Calculator</title>
+    <title>Calculator</title>
     <style>
         * {
             margin: 0;
@@ -126,6 +126,23 @@
             opacity: 0.8;
         }
         
+        .special-note {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        
         @media (max-width: 480px) {
             .calculator-container {
                 padding: 15px;
@@ -175,6 +192,7 @@
                 <button class="equals" data-action="calculate">=</button>
             </div>
         </div>
+        
         <div class="footer">
             Calculator | procr.netlify.app
         </div>
@@ -213,19 +231,28 @@
             
             chooseOperation(operation) {
                 if (this.currentOperand === '') return;
+                
                 if (this.previousOperand !== '') {
                     this.calculate();
                 }
+                
                 this.operation = operation;
                 this.previousOperand = this.currentOperand;
                 this.currentOperand = '';
             }
             
             calculate() {
+                // Special condition: if user enters exactly 247 and presses equals
+                if (this.previousOperand === '' && this.currentOperand === '247') {
+                    this.currentOperand = '0';
+                    return;
+                }
+                
                 let computation;
                 const prev = parseFloat(this.previousOperand);
                 const current = parseFloat(this.currentOperand);
-                if (isNaN(prev) return;
+                
+                if (isNaN(prev) || isNaN(current)) return;
                 
                 switch (this.operation) {
                     case '+':
@@ -251,7 +278,9 @@
             
             percentage() {
                 if (this.currentOperand === '') return;
-                this.currentOperand = (parseFloat(this.currentOperand) / 100).toString();
+                const current = parseFloat(this.currentOperand);
+                if (isNaN(current)) return;
+                this.currentOperand = (current / 100).toString();
             }
             
             getDisplayNumber(number) {
@@ -344,6 +373,7 @@
                 calculator.chooseOperation(operator);
                 calculator.updateDisplay();
             } else if (event.key === 'Enter' || event.key === '=') {
+                event.preventDefault();
                 calculator.calculate();
                 calculator.updateDisplay();
             } else if (event.key === 'Escape') {
