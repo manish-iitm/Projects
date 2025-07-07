@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFloow - Full Stack Web Development</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1E88E5;
+            --primary-dark: #1565C0;
+            --secondary: #FF6F00;
+            --success: #28a745;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo i {
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover, nav a.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #e65100;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+            position: relative;
+            border-radius: 0 0 12px 12px;
+            overflow: hidden;
+            margin: 0 1.5rem 3rem;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(30, 136, 229, 0.9), rgba(21, 101, 192, 0.9));
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: white;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+        }
+        
+        /* Dashboard */
+        .dashboard-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            transition: var(--transition);
+        }
+        
+        .dashboard-section:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        /* Forms */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.8rem;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Course Cards */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+        }
+        
+        .thumbnail-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .thumbnail-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .course-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .course-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary-dark);
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .enroll-btn {
+            margin-top: auto;
+            padding-top: 1.5rem;
+        }
+        
+        .btn-enroll {
+            width: 100%;
+            background: var(--success);
+            color: white;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-enroll:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        /* Course Page */
+        .course-page {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .course-header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .course-title-large {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-3px);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .course-body {
+            padding: 2rem;
+        }
+        
+        .course-description {
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+        
+        .form-container-embed {
+            background: rgba(30, 136, 229, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .certificate-form {
+            position: relative;
+            padding-bottom: 80%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .certificate-form iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Progress */
+        .progress-container {
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .progress-bar {
+            flex-grow: 1;
+            height: 10px;
+            background: var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        /* Contact Form */
+        .contact-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            transition: var(--transition);
+        }
+        
+        .contact-section:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .dashboard-section, .contact-section {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .course-header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .course-title-large {
+                font-size: 1.8rem;
+                padding-top: 1.5rem;
+            }
+            
+            .certificate-form {
+                padding-bottom: 120%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .certificate-form {
+                padding-bottom: 150%;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animated {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            background: var(--success);
+        }
+        
+        .toast.error {
+            background: var(--danger);
+        }
+        
+        .toast i {
+            font-size: 1.3rem;
+        }
+        
+        /* Minimal footer */
+        .minimal-footer {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .minimal-footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Operation successful!</span>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>EduFloow</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" onclick="showHome()">Home</a></li>
+                    <li><a href="#" onclick="showStudentDashboard()">Courses</a></li>
+                    <li><a href="#" onclick="showContact()">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <button class="btn btn-outline" onclick="showLogin()">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Master Full Stack Web Development</h1>
+            <p>Learn to build modern web applications from frontend to backend with our comprehensive course</p>
+            <button class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;" onclick="showStudentDashboard()">
+                <i class="fas fa-play-circle"></i> Start Learning
+            </button>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Login Section -->
+        <div class="dashboard-section animated" id="loginSection">
+            <h2 class="section-title"><i class="fas fa-sign-in-alt"></i> Login to Your Account</h2>
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password">
+                </div>
+                <button class="btn btn-submit" onclick="login()">
+                    <i class="fas fa-lock"></i> Login
+                </button>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div class="dashboard-section hidden animated" id="adminDashboard">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 class="section-title"><i class="fas fa-cogs"></i> Admin Dashboard</h2>
+                <button class="btn btn-outline" style="background: var(--danger); border: none;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            
+            <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--primary);">
+                <i class="fas fa-plus-circle"></i> Add New Course
+            </h3>
+            
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="courseTitle">Course Title</label>
+                    <input type="text" id="courseTitle" class="form-control" placeholder="Enter course title">
+                </div>
+                <div class="form-group">
+                    <label for="courseDescription">Course Description</label>
+                    <textarea id="courseDescription" class="form-control" placeholder="Enter course description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="videoLink">YouTube Video Link</label>
+                    <input type="text" id="videoLink" class="form-control" placeholder="https://youtube.com/...">
+                    <small class="form-text">Note: Videos will play without ads</small>
+                </div>
+                <div class="form-group">
+                    <label for="certificateLink">Certificate Form Link</label>
+                    <input type="text" id="certificateLink" class="form-control" placeholder="https://forms.gle/...">
+                </div>
+                <button class="btn btn-submit" onclick="addCourse()">
+                    <i class="fas fa-save"></i> Save Course
+                </button>
+            </div>
+            
+            <h3 style="font-size: 1.5rem; margin: 2.5rem 0 1.5rem; color: var(--primary);">
+                <i class="fas fa-list"></i> Manage Courses
+            </h3>
+            <div id="adminCourseList" class="courses-grid"></div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div class="dashboard-section hidden animated" id="studentDashboard">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 class="section-title"><i class="fas fa-user-graduate"></i> Student Dashboard</h2>
+                <button class="btn btn-outline" style="background: var(--danger); border: none;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            
+            <div class="user-info" style="background: rgba(30, 136, 229, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.4rem; margin-bottom: 0.3rem;" id="studentName">Student Account</h3>
+                        <p id="studentEmail"></p>
+                        <p>Enrolled in <strong id="enrolledCount">0 courses</strong></p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--primary);">
+                <i class="fas fa-book-open"></i> Available Courses
+            </h3>
+            <div id="courseList" class="courses-grid"></div>
+        </div>
+
+        <!-- Course Page -->
+        <div class="dashboard-section hidden animated" id="coursePage">
+            <div class="course-page">
+                <div class="course-header">
+                    <button class="back-btn" onclick="showStudentDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h1 class="course-title-large" id="coursePageTitle">Course Title</h1>
+                    <p>Complete this course to earn your certificate</p>
+                </div>
+                
+                <div class="video-container">
+                    <iframe id="courseVideo" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span id="progressText">0% Complete</span>
+                </div>
+                
+                <div class="course-body">
+                    <div class="course-description" id="courseDescriptionText">
+                        Course description will appear here...
+                    </div>
+                    
+                    <div class="form-container-embed">
+                        <h3 class="form-title"><i class="fas fa-certificate"></i> Certificate Application</h3>
+                        <p>Complete this form to receive your course certificate upon completion.</p>
+                        
+                        <div class="certificate-form">
+                            <iframe id="certificateForm" src=""></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="contact-section hidden animated" id="contactSection">
+            <h2 class="section-title"><i class="fas fa-envelope"></i> Contact Us</h2>
+            <div class="form-container">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="contactName">Your Name</label>
+                        <input type="text" id="contactName" class="form-control" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email Address</label>
+                        <input type="email" id="contactEmail" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactSubject">Subject</label>
+                        <input type="text" id="contactSubject" class="form-control" placeholder="Enter subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" class="form-control" placeholder="Enter your message" rows="5" required></textarea>
+                    </div>
+                    <button class="btn btn-submit" type="submit">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Minimal Footer -->
+    <div class="container">
+        <div class="minimal-footer">
+            <p>© 2025 EduFloow Learning Platform. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Course data (only Full Stack Web Development)
+        const fullStackCourse = {
+            id: 1,
+            title: "Full Stack Web Development",
+            description: "Master the complete web development stack with this comprehensive course. Learn HTML, CSS, JavaScript, Node.js, Express, MongoDB, and React. Build real-world projects and deploy them to production.",
+            video: "https://www.youtube.com/embed/UB1O30fR-EE?rel=0&modestbranding=1&showinfo=0&iv_load_policy=3",
+            cert: "https://docs.google.com/forms/d/e/1FAIpQLSeT6MPe1o1Lq2QYfN7kCCZ4Yd6Y7f9z4fJ7l0n1a7b8c9d0e1f/viewform?embedded=true",
+            enrolled: false
+        };
+        
+        // Initialize courses
+        function initCourses() {
+            if (!localStorage.getItem("courses")) {
+                localStorage.setItem("courses", JSON.stringify([fullStackCourse]));
+            }
+            
+            // Initialize enrollment status
+            const courses = JSON.parse(localStorage.getItem("courses"));
+            const enrollments = JSON.parse(localStorage.getItem("enrollments") || "{}");
+            const studentEmail = "yadavvedant027@gmail.com";
+            
+            if (enrollments[studentEmail]) {
+                courses.forEach(course => {
+                    if (enrollments[studentEmail][course.id]) {
+                        course.enrolled = true;
+                    }
+                });
+                localStorage.setItem("courses", JSON.stringify(courses));
+            }
+        }
+        
+        // Show toast notification
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById("toast");
+            const toastMessage = document.getElementById("toast-message");
+            
+            toastMessage.textContent = message;
+            toast.className = `toast ${isSuccess ? 'success' : 'error'}`;
+            toast.classList.add("show");
+            
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+        
+        // Login function with real credentials
+        function login() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            
+            // Admin credentials
+            if (email === "pmanish332007@gmail.com" && password === "Stjl9752") {
+                document.getElementById("loginSection").classList.add("hidden");
+                document.getElementById("adminDashboard").classList.remove("hidden");
+                showToast("Admin login successful!");
+                displayAdminCourses();
+            } 
+            // Student credentials
+            else if (email === "yadavvedant027@gmail.com" && password === "vedant@123") {
+                document.getElementById("loginSection").classList.add("hidden");
+                document.getElementById("studentDashboard").classList.remove("hidden");
+                showToast("Student login successful!");
+                
+                // Set student info
+                document.getElementById("studentName").textContent = "Vedant Yadav";
+                document.getElementById("studentEmail").textContent = email;
+                
+                displayCourses();
+            } else {
+                showToast("Invalid credentials. Please try again.", false);
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            document.getElementById("adminDashboard").classList.add("hidden");
+            document.getElementById("studentDashboard").classList.add("hidden");
+            document.getElementById("coursePage").classList.add("hidden");
+            document.getElementById("loginSection").classList.remove("hidden");
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+            showToast("You have been logged out");
+        }
+        
+        // Show login section
+        function showLogin() {
+            document.getElementById("adminDashboard").classList.add("hidden");
+            document.getElementById("studentDashboard").classList.add("hidden");
+            document.getElementById("coursePage").classList.add("hidden");
+            document.getElementById("contactSection").classList.add("hidden");
+            document.getElementById("loginSection").classList.remove("hidden");
+        }
+        
+        // Show student dashboard
+        function showStudentDashboard() {
+            document.getElementById("adminDashboard").classList.add("hidden");
+            document.getElementById("coursePage").classList.add("hidden");
+            document.getElementById("loginSection").classList.add("hidden");
+            document.getElementById("contactSection").classList.add("hidden");
+            document.getElementById("studentDashboard").classList.remove("hidden");
+        }
+        
+        // Show home section
+        function showHome() {
+            document.getElementById("adminDashboard").classList.add("hidden");
+            document.getElementById("studentDashboard").classList.add("hidden");
+            document.getElementById("coursePage").classList.add("hidden");
+            document.getElementById("loginSection").classList.add("hidden");
+            document.getElementById("contactSection").classList.add("hidden");
+        }
+        
+        // Show contact section
+        function showContact() {
+            document.getElementById("adminDashboard").classList.add("hidden");
+            document.getElementById("studentDashboard").classList.add("hidden");
+            document.getElementById("coursePage").classList.add("hidden");
+            document.getElementById("loginSection").classList.add("hidden");
+            document.getElementById("contactSection").classList.remove("hidden");
+        }
+        
+        // Add new course
+        function addCourse() {
+            const title = document.getElementById("courseTitle").value.trim();
+            const description = document.getElementById("courseDescription").value.trim();
+            const video = document.getElementById("videoLink").value.trim();
+            const cert = document.getElementById("certificateLink").value.trim();
+            
+            if (!title || !video || !cert) {
+                showToast("Title, video link and certificate link are required", false);
+                return;
+            }
+            
+            const courses = JSON.parse(localStorage.getItem("courses") || []);
+            const newCourse = {
+                id: Date.now(),
+                title,
+                description,
+                video: getAdFreeEmbedUrl(video),
+                cert,
+                enrolled: false
+            };
+            
+            courses.push(newCourse);
+            localStorage.setItem("courses", JSON.stringify(courses));
+            
+            // Clear form
+            document.getElementById("courseTitle").value = "";
+            document.getElementById("courseDescription").value = "";
+            document.getElementById("videoLink").value = "";
+            document.getElementById("certificateLink").value = "";
+            
+            showToast("Course added successfully!");
+            displayAdminCourses();
+        }
+        
+        // Delete course
+        function deleteCourse(id) {
+            let courses = JSON.parse(localStorage.getItem("courses") || []);
+            courses = courses.filter(course => course.id !== id);
+            localStorage.setItem("courses", JSON.stringify(courses));
+            
+            showToast("Course deleted successfully!");
+            displayAdminCourses();
+            displayCourses();
+        }
+        
+        // Enroll in a course
+        function enrollCourse(courseId) {
+            const courses = JSON.parse(localStorage.getItem("courses"));
+            const course = courses.find(c => c.id === courseId);
+            
+            if (course) {
+                course.enrolled = true;
+                localStorage.setItem("courses", JSON.stringify(courses));
+                
+                // Update enrollment tracking
+                const enrollments = JSON.parse(localStorage.getItem("enrollments") || "{}");
+                const studentEmail = "yadavvedant027@gmail.com";
+                
+                if (!enrollments[studentEmail]) {
+                    enrollments[studentEmail] = {};
+                }
+                
+                enrollments[studentEmail][courseId] = true;
+                localStorage.setItem("enrollments", JSON.stringify(enrollments));
+                
+                showToast(`Enrolled in "${course.title}" successfully!`);
+                displayCourses();
+            }
+        }
+        
+        // Show course page
+        function showCoursePage(courseId) {
+            const courses = JSON.parse(localStorage.getItem("courses"));
+            const course = courses.find(c => c.id === courseId);
+            
+            if (course) {
+                document.getElementById("coursePageTitle").textContent = course.title;
+                document.getElementById("courseDescriptionText").textContent = course.description;
+                document.getElementById("courseVideo").src = course.video;
+                document.getElementById("certificateForm").src = course.cert;
+                
+                document.getElementById("studentDashboard").classList.add("hidden");
+                document.getElementById("coursePage").classList.remove("hidden");
+                
+                // Simulate progress
+                simulateProgress();
+            }
+        }
+        
+        // Simulate progress
+        function simulateProgress() {
+            const progressFill = document.getElementById("progressFill");
+            const progressText = document.getElementById("progressText");
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += 5;
+                if (progress > 100) progress = 100;
+                
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `${progress}% Complete`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+            }, 500);
+        }
+        
+        // Get ad-free embed URL
+        function getAdFreeEmbedUrl(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            const videoId = (match && match[2].length === 11) ? match[2] : null;
+            
+            if (!videoId) return url;
+            
+            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0&iv_load_policy=3`;
+        }
+        
+        // Display courses for student
+        function displayCourses() {
+            const courses = JSON.parse(localStorage.getItem("courses") || []);
+            const courseList = document.getElementById("courseList");
+            courseList.innerHTML = "";
+            
+            // Count enrolled courses
+            const enrolledCount = courses.filter(course => course.enrolled).length;
+            document.getElementById("enrolledCount").textContent = `${enrolledCount} courses`;
+            
+            if (courses.length === 0) {
+                courseList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
+                        <i class="fas fa-book" style="font-size: 4rem; color: var(--gray); margin-bottom: 1rem;"></i>
+                        <h3>No courses available</h3>
+                        <p>Check back later for new courses</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            courses.forEach(course => {
+                const videoId = course.video.split('/').pop().split('?')[0];
+                const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+                
+                const courseCard = document.createElement("div");
+                courseCard.className = "course-card";
+                courseCard.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${thumbnailUrl}" alt="${course.title}">
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">${course.title}</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-clock"></i> 12 weeks</span>
+                            <span><i class="fas fa-star"></i> 4.9</span>
+                        </div>
+                        <p>${course.description.substring(0, 100)}...</p>
+                        <div class="enroll-btn">
+                            ${course.enrolled ? 
+                                `<button class="btn-enroll" onclick="showCoursePage(${course.id})">
+                                    <i class="fas fa-graduation-cap"></i> Let's Learn
+                                </button>` :
+                                `<button class="btn-enroll" onclick="enrollCourse(${course.id})">
+                                    <i class="fas fa-plus-circle"></i> Enroll Now
+                                </button>`
+                            }
+                        </div>
+                    </div>
+                `;
+                courseList.appendChild(courseCard);
+            });
+        }
+        
+        // Display courses for admin (with delete option)
+        function displayAdminCourses() {
+            const courses = JSON.parse(localStorage.getItem("courses") || []);
+            const adminCourseList = document.getElementById("adminCourseList");
+            adminCourseList.innerHTML = "";
+            
+            if (courses.length === 0) {
+                adminCourseList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
+                        <i class="fas fa-book" style="font-size: 4rem; color: var(--gray); margin-bottom: 1rem;"></i>
+                        <h3>No courses added yet</h3>
+                        <p>Add your first course using the form above</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            courses.forEach(course => {
+                const videoId = course.video.split('/').pop().split('?')[0];
+                const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+                
+                const courseCard = document.createElement("div");
+                courseCard.className = "course-card";
+                courseCard.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${thumbnailUrl}" alt="${course.title}">
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">${course.title}</h3>
+                        <p>${course.description.substring(0, 100)}...</p>
+                        <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                            <button class="btn btn-primary" style="flex: 1;" onclick="deleteCourse(${course.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                adminCourseList.appendChild(courseCard);
+            });
+        }
+        
+        // Handle contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const subject = document.getElementById('contactSubject').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            // In a real application, you would send this data to your backend
+            // which would then email it to mpcrack65@gmail.com
+            // For this demo, we'll just show a success message
+            
+            showToast('Your message has been sent successfully!');
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+        });
+        
+        // Initialize the page
+        window.onload = function() {
+            initCourses();
+            
+            // Hide all sections except home
+            document.getElementById("adminDashboard").classList.add("hidden");
+            document.getElementById("studentDashboard").classList.add("hidden");
+            document.getElementById("coursePage").classList.add("hidden");
+            document.getElementById("loginSection").classList.add("hidden");
+            document.getElementById("contactSection").classList.add("hidden");
+        };
+    </script>
+</body>
+</html>
