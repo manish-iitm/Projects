@@ -220,6 +220,9 @@
             }
             
             appendNumber(number) {
+                if (this.currentOperand === '🤡') {
+                    this.currentOperand = '';
+                }
                 if (number === '.' && this.currentOperand.includes('.')) return;
                 
                 if (this.currentOperand === '0' && number !== '.') {
@@ -230,7 +233,7 @@
             }
             
             chooseOperation(operation) {
-                if (this.currentOperand === '') return;
+                if (this.currentOperand === '' || this.currentOperand === '🤡') return;
                 
                 if (this.previousOperand !== '') {
                     this.calculate();
@@ -244,7 +247,7 @@
             calculate() {
                 // Special condition: if user enters exactly 247 and presses equals
                 if (this.previousOperand === '' && this.currentOperand === '247') {
-                    this.currentOperand = '0';
+                    this.currentOperand = '🤡';
                     return;
                 }
                 
@@ -284,6 +287,8 @@
             }
             
             getDisplayNumber(number) {
+                if (number === '🤡') return '🤡';
+
                 const stringNumber = number.toString();
                 const integerDigits = parseFloat(stringNumber.split('.')[0]);
                 const decimalDigits = stringNumber.split('.')[1];
@@ -389,4 +394,4 @@
         });
     </script>
 </body>
-</html>
+                    </html>
