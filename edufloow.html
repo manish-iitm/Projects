@@ -173,6 +173,103 @@
             margin-bottom: 2rem;
         }
         
+        /* Featured Courses Slider */
+        .featured-courses {
+            position: relative;
+            margin: 3rem auto 0;
+            max-width: 1000px;
+            overflow: hidden;
+        }
+        
+        .featured-courses-container {
+            display: flex;
+            transition: transform 0.5s ease;
+            padding: 1rem 0;
+        }
+        
+        .featured-course {
+            min-width: 300px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 0 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .featured-course:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .featured-course h3 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .featured-course p {
+            color: var(--dark);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .featured-course .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+        
+        .slider-nav button {
+            background: rgba(255,255,255,0.7);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+        }
+        
+        .slider-nav button:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            gap: 0.5rem;
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .slider-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
         /* Dashboard */
         .dashboard-section {
             background: white;
@@ -514,6 +611,10 @@
             .certificate-form {
                 padding-bottom: 120%;
             }
+            
+            .featured-course {
+                min-width: 250px;
+            }
         }
         
         @media (max-width: 576px) {
@@ -523,6 +624,10 @@
             
             .certificate-form {
                 padding-bottom: 150%;
+            }
+            
+            .featured-course {
+                min-width: 200px;
             }
         }
         
@@ -628,6 +733,22 @@
             <button class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;" onclick="showStudentDashboard()">
                 <i class="fas fa-play-circle"></i> Start Learning
             </button>
+            
+            <!-- Featured Courses Slider -->
+            <div class="featured-courses">
+                <div class="featured-courses-container" id="featuredCourses">
+                    <!-- Courses will be added dynamically -->
+                </div>
+                
+                <div class="slider-nav">
+                    <button id="prevCourse"><i class="fas fa-chevron-left"></i></button>
+                    <button id="nextCourse"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                
+                <div class="slider-dots" id="sliderDots">
+                    <!-- Dots will be added dynamically -->
+                </div>
+            </div>
         </div>
     </section>
 
@@ -806,25 +927,142 @@
             enrolled: false
         };
         
+        // Additional sample courses for the slider
+        const sampleCourses = [
+            {
+                id: 2,
+                title: "Python Programming",
+                description: "Learn Python from scratch and build real-world applications. Perfect for beginners and intermediate learners.",
+                video: "https://www.youtube.com/embed/rfscVS0vtbw",
+                cert: "https://docs.google.com/forms/d/e/1FAIpQLSeT6MPe1o1Lq2QYfN7kCCZ4Yd6Y7f9z4fJ7l0n1a7b8c9d0e1f/viewform?embedded=true",
+                enrolled: false
+            },
+            {
+                id: 3,
+                title: "Data Science Fundamentals",
+                description: "Introduction to data analysis, visualization, and machine learning with Python.",
+                video: "https://www.youtube.com/embed/ua-CiDNNj30",
+                cert: "https://docs.google.com/forms/d/e/1FAIpQLSeT6MPe1o1Lq2QYfN7kCCZ4Yd6Y7f9z4fJ7l0n1a7b8c9d0e1f/viewform?embedded=true",
+                enrolled: false
+            },
+            {
+                id: 4,
+                title: "Mobile App Development",
+                description: "Build cross-platform mobile apps with React Native and Firebase.",
+                video: "https://www.youtube.com/embed/0-S5a0eXPoc",
+                cert: "https://docs.google.com/forms/d/e/1FAIpQLSeT6MPe1o1Lq2QYfN7kCCZ4Yd6Y7f9z4fJ7l0n1a7b8c9d0e1f/viewform?embedded=true",
+                enrolled: false
+            }
+        ];
+        
+        // Slider functionality
+        let currentSlide = 0;
+        let courses = [];
+        
         // Initialize courses
         function initCourses() {
             if (!localStorage.getItem("courses")) {
-                localStorage.setItem("courses", JSON.stringify([fullStackCourse]));
+                localStorage.setItem("courses", JSON.stringify([fullStackCourse, ...sampleCourses]));
             }
             
             // Initialize enrollment status
-            const courses = JSON.parse(localStorage.getItem("courses"));
+            const storedCourses = JSON.parse(localStorage.getItem("courses"));
             const enrollments = JSON.parse(localStorage.getItem("enrollments") || "{}");
             const studentEmail = "yadavvedant027@gmail.com";
             
             if (enrollments[studentEmail]) {
-                courses.forEach(course => {
+                storedCourses.forEach(course => {
                     if (enrollments[studentEmail][course.id]) {
                         course.enrolled = true;
                     }
                 });
-                localStorage.setItem("courses", JSON.stringify(courses));
+                localStorage.setItem("courses", JSON.stringify(storedCourses));
             }
+            
+            courses = JSON.parse(localStorage.getItem("courses"));
+            displayFeaturedCourses();
+        }
+        
+        // Display featured courses in slider
+        function displayFeaturedCourses() {
+            const featuredContainer = document.getElementById('featuredCourses');
+            const dotsContainer = document.getElementById('sliderDots');
+            
+            featuredContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            
+            // Show only the first 4 courses in the slider
+            const featured = courses.slice(0, 4);
+            
+            featured.forEach((course, index) => {
+                // Create course card
+                const courseCard = document.createElement('div');
+                courseCard.className = 'featured-course';
+                courseCard.innerHTML = `
+                    <h3>${course.title}</h3>
+                    <p>${course.description.substring(0, 100)}...</p>
+                    <button class="btn btn-primary" onclick="showCoursePage(${course.id})">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </button>
+                `;
+                featuredContainer.appendChild(courseCard);
+                
+                // Create slider dot
+                const dot = document.createElement('div');
+                dot.className = 'slider-dot' + (index === 0 ? ' active' : '');
+                dot.onclick = () => goToSlide(index);
+                dotsContainer.appendChild(dot);
+            });
+            
+            // Set up slider navigation
+            document.getElementById('prevCourse').onclick = () => prevSlide();
+            document.getElementById('nextCourse').onclick = () => nextSlide();
+            
+            // Auto slide every 5 seconds
+            setInterval(() => {
+                nextSlide();
+            }, 5000);
+        }
+        
+        function goToSlide(index) {
+            const featuredContainer = document.getElementById('featuredCourses');
+            const dots = document.querySelectorAll('.slider-dot');
+            
+            currentSlide = index;
+            featuredContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update active dot
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+        
+        function nextSlide() {
+            const featuredContainer = document.getElementById('featuredCourses');
+            const dots = document.querySelectorAll('.slider-dot');
+            const courseCount = document.querySelectorAll('.featured-course').length;
+            
+            currentSlide = (currentSlide + 1) % courseCount;
+            featuredContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update active dot
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+        
+        function prevSlide() {
+            const featuredContainer = document.getElementById('featuredCourses');
+            const dots = document.querySelectorAll('.slider-dot');
+            const courseCount = document.querySelectorAll('.featured-course').length;
+            
+            currentSlide = (currentSlide - 1 + courseCount) % courseCount;
+            featuredContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update active dot
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
         }
         
         // Show toast notification
@@ -949,6 +1187,7 @@
             
             showToast("Course added successfully!");
             displayAdminCourses();
+            displayFeaturedCourses();
         }
         
         // Delete course
@@ -960,6 +1199,7 @@
             showToast("Course deleted successfully!");
             displayAdminCourses();
             displayCourses();
+            displayFeaturedCourses();
         }
         
         // Enroll in a course
