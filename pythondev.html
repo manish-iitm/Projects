@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Programming Masterclass | From Beginner to Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3776ab;
+            --primary-dark: #2d5d8a;
+            --secondary: #ffd43b;
+            --accent: #ff5722;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --card-bg: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 80px 0 60px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .tagline {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Video Section */
+        .video-section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .video-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Tech Stack */
+        .tech-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .tech-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tech-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .tech-card h3 i {
+            margin-right: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .tech-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        
+        .tech-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            object-fit: contain;
+        }
+        
+        /* Modules */
+        .modules-section {
+            padding: 60px 0;
+            background-color: #f0f8ff;
+        }
+        
+        .module-accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .module {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .module-header {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: var(--dark);
+        }
+        
+        .module-header h3 {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .module-header i {
+            transition: transform 0.3s ease;
+        }
+        
+        .module.active .module-header i {
+            transform: rotate(180deg);
+        }
+        
+        .module-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .module.active .module-content {
+            padding: 25px;
+            max-height: 500px;
+        }
+        
+        .module-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .module-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .checkmark {
+            color: var(--accent);
+            margin-right: 12px;
+            font-size: 0.9rem;
+            margin-top: 3px;
+        }
+        
+        /* CTA */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Form */
+        .form-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-container iframe {
+            width: 100%;
+            min-height: 800px;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            background-color: var(--dark);
+            color: white;
+        }
+        
+        .copyright {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Python Programming Masterclass</h1>
+            <p class="tagline">Go from beginner to professional with our comprehensive Python course</p>
+        </div>
+    </header>
+
+    <section class="video-section">
+        <div class="container">
+            <h2 class="section-title">Course Introduction</h2>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <!-- Python Programming Lecture -->
+                    <iframe src="https://www.youtube-nocookie.com/embed/UrsmFxEIp5k?si=dqfbZiwzzDUArWZZ&rel=0&modestbranding=1" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tech-section">
+        <div class="container">
+            <h2 class="section-title">What You'll Learn</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3><i class="fab fa-python"></i> Core Python</h3>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="tech-icon" alt="Python">
+                        <span>Python Syntax & Features</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="tech-icon" alt="OOP">
+                        <span>Object-Oriented Programming</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="tech-icon" alt="Functions">
+                        <span>Functions & Modules</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="tech-icon" alt="Data Structures">
+                        <span>Data Structures</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h3><i class="fas fa-flask"></i> Python Ecosystem</h3>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" class="tech-icon" alt="NumPy">
+                        <span>NumPy for Scientific Computing</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" class="tech-icon" alt="Pandas">
+                        <span>Pandas for Data Analysis</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" class="tech-icon" alt="Django">
+                        <span>Django Web Framework</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" class="tech-icon" alt="Flask">
+                        <span>Flask Microframework</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h3><i class="fas fa-chart-line"></i> Advanced Topics</h3>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" class="tech-icon" alt="TensorFlow">
+                        <span>Machine Learning</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" class="tech-icon" alt="Automation">
+                        <span>Automation & Scripting</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-original.svg" class="tech-icon" alt="Jupyter">
+                        <span>Data Science Notebooks</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" class="tech-icon" alt="Docker">
+                        <span>Python in Containers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="modules-section">
+        <div class="container">
+            <h2 class="section-title">Course Curriculum</h2>
+            <div class="module-accordion">
+                <div class="module active">
+                    <div class="module-header">
+                        <h3>Module 1: Python Fundamentals (4 weeks)</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Python Basics</strong>
+                                <p>Syntax, variables, data types</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Control Flow</strong>
+                                <p>Loops, conditionals, functions</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Data Structures</strong>
+                                <p>Lists, tuples, dictionaries, sets</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>File Handling</strong>
+                                <p>Reading/writing files</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="module">
+                    <div class="module-header">
+                        <h3>Module 2: Intermediate Python (5 weeks)</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Object-Oriented Programming</strong>
+                                <p>Classes, inheritance, polymorphism</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Error Handling</strong>
+                                <p>Exceptions and debugging</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Modules & Packages</strong>
+                                <p>Creating and using modules</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Virtual Environments</strong>
+                                <p>Pip and dependency management</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="module">
+                    <div class="module-header">
+                        <h3>Module 3: Advanced Applications (6 weeks)</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Web Development</strong>
+                                <p>Django and Flask frameworks</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Data Science</strong>
+                                <p>Pandas, NumPy, Matplotlib</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Automation</strong>
+                                <p>Scripting and web scraping</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>APIs & Web Services</strong>
+                                <p>REST APIs with Python</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Master Python Programming?</h2>
+            <p class="cta-subtitle">Join thousands of students who've used Python to advance their careers</p>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="container">
+            <h2 class="section-title">Get Certified</h2>
+            <div class="form-container">
+                <!-- Python Certification Form -->
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScKxDsm8D5Y3gfOvLO1qPVKbT8nASipdUi64SUaeKgRgSYTGw/viewform?embedded=true"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p class="copyright">© 2025 Python Programming Masterclass. All rights reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.module-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const module = header.parentElement;
+                module.classList.toggle('active');
+                
+                // Close other open modules
+                document.querySelectorAll('.module').forEach(m => {
+                    if (m !== module && m.classList.contains('active')) {
+                        m.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Video embed modifications to prevent ads
+        const videoIframe = document.querySelector('.video-wrapper iframe');
+        if (videoIframe) {
+            // Ensure no cookie tracking
+            const src = videoIframe.src;
+            if (!src.includes('nocookie')) {
+                videoIframe.src = src.replace('youtube.com', 'youtube-nocookie.com') + '&rel=0';
+            }
+        }
+    </script>
+</body>
+</html>
