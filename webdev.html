@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Stack Pro | Modern Web Development</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --card-bg: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7ff;
+            overflow-x: hidden;
+        }
+        
+        @supports (font-variation-settings: normal) {
+            body { font-family: 'Inter var', -apple-system, BlinkMacSystemFont, sans-serif; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 80px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .tagline {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        
+        /* Video Section */
+        .video-section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .video-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Tech Stack */
+        .tech-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .tech-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tech-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .tech-card h3 i {
+            margin-right: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .tech-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        
+        .tech-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            object-fit: contain;
+        }
+        
+        /* Modules */
+        .modules-section {
+            padding: 60px 0;
+            background-color: #f9faff;
+        }
+        
+        .module-accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .module {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .module-header {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .module-header h3 {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .module-header i {
+            transition: transform 0.3s ease;
+        }
+        
+        .module.active .module-header i {
+            transform: rotate(180deg);
+        }
+        
+        .module-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .module.active .module-content {
+            padding: 25px;
+            max-height: 500px;
+        }
+        
+        .module-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .module-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .checkmark {
+            color: var(--accent);
+            margin-right: 12px;
+            font-size: 0.9rem;
+            margin-top: 3px;
+        }
+        
+        /* CTA */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--secondary), var(--primary-dark));
+            color: white;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Form */
+        .form-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-container iframe {
+            width: 100%;
+            min-height: 800px;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            background-color: var(--dark);
+            color: white;
+        }
+        
+        .copyright {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Full Stack Web Development</h1>
+                <p class="tagline">Master modern web technologies with our comprehensive course</p>
+            </div>
+        </div>
+    </header>
+
+    <section class="video-section">
+        <div class="container">
+            <h2 class="section-title">Course Introduction</h2>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <!-- Embed without ads using nocookie domain -->
+                    <iframe src="https://www.youtube-nocookie.com/embed/HVjjoMvutj4?si=Jibi0GBbWyTSLZ5f&rel=0&modestbranding=1" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tech-section">
+        <div class="container">
+            <h2 class="section-title">What You'll Learn</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3><i class="fas fa-laptop-code"></i> Frontend</h3>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" class="tech-icon" alt="HTML5">
+                        <span>HTML5 Semantic Markup</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" class="tech-icon" alt="CSS3">
+                        <span>CSS3 & Animations</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="tech-icon" alt="JavaScript">
+                        <span>Modern JavaScript (ES6+)</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" class="tech-icon" alt="React">
+                        <span>React Framework</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h3><i class="fas fa-server"></i> Backend</h3>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" class="tech-icon" alt="Node.js">
+                        <span>Node.js Runtime</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" class="tech-icon" alt="Express">
+                        <span>Express Framework</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" class="tech-icon" alt="MongoDB">
+                        <span>MongoDB Database</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" class="tech-icon" alt="PostgreSQL">
+                        <span>PostgreSQL</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h3><i class="fas fa-tools"></i> Tools</h3>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" class="tech-icon" alt="Git">
+                        <span>Git Version Control</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" class="tech-icon" alt="npm">
+                        <span>Package Management</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg" class="tech-icon" alt="Webpack">
+                        <span>Build Tools</span>
+                    </div>
+                    <div class="tech-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" class="tech-icon" alt="Docker">
+                        <span>Docker Containers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="modules-section">
+        <div class="container">
+            <h2 class="section-title">Course Curriculum</h2>
+            <div class="module-accordion">
+                <div class="module active">
+                    <div class="module-header">
+                        <h3>Module 1: Frontend Foundations (4 weeks)</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>HTML5 & Semantic Structure</strong>
+                                <p>Build accessible, SEO-friendly markup</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>CSS3 & Flexbox/Grid</strong>
+                                <p>Modern layout techniques and animations</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>JavaScript Fundamentals</strong>
+                                <p>ES6+ syntax, DOM manipulation, async JS</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Responsive Design</strong>
+                                <p>Mobile-first development and media queries</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="module">
+                    <div class="module-header">
+                        <h3>Module 2: Frontend Frameworks (6 weeks)</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>React Fundamentals</strong>
+                                <p>Components, props, state, and hooks</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>State Management</strong>
+                                <p>Context API, Redux, and Zustand</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Routing & API Integration</strong>
+                                <p>React Router and fetching data</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Performance Optimization</strong>
+                                <p>Code splitting, lazy loading, memoization</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="module">
+                    <div class="module-header">
+                        <h3>Module 3: Backend Development (5 weeks)</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Node.js Fundamentals</strong>
+                                <p>Event loop, streams, and modules</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Express Framework</strong>
+                                <p>Middleware, routing, and REST APIs</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>Authentication</strong>
+                                <p>JWT, sessions, and OAuth</p>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-check checkmark"></i>
+                            <div>
+                                <strong>API Security</strong>
+                                <p>CORS, rate limiting, and sanitization</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Launch Your Developer Career?</h2>
+            <p class="cta-subtitle">Join thousands of students who've transformed their careers with our full-stack program</p>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="container">
+            <h2 class="section-title">Get Certified</h2>
+            <div class="form-container">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfAojbe21DX1mlJWQG4OjKHLA53yyk4B_AsQzL8aUNghBXnVA/viewform?embedded=true"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p class="copyright">© 2025 Full Stack Pro. All rights reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.module-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const module = header.parentElement;
+                module.classList.toggle('active');
+                
+                // Close other open modules
+                document.querySelectorAll('.module').forEach(m => {
+                    if (m !== module && m.classList.contains('active')) {
+                        m.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Video embed modifications to prevent ads
+        const videoIframe = document.querySelector('.video-wrapper iframe');
+        if (videoIframe) {
+            // Ensure no cookie tracking
+            const src = videoIframe.src;
+            if (!src.includes('nocookie')) {
+                videoIframe.src = src.replace('youtube.com', 'youtube-nocookie.com') + '&rel=0';
+            }
+        }
+    </script>
+</body>
+</html>
