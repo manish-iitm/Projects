@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Clipboard</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
+        #clipboard-container { width: 90%; max-width: 600px; }
+        textarea { width: 100%; height: 300px; font-size: 16px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 15px; font-size: 16px; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; margin-top: 10px; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <div id="clipboard-container">
+        <textarea id="clipboard-text" placeholder="Start typing here..."></textarea>
+        <button onclick="copyToClipboard()">Copy Text</button>
+    </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+
+    <!-- Add the Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        // IMPORTANT: Replace with your own Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const clipboardText = document.getElementById('clipboard-text');
+
+        // Reference to the 'text' node in your database
+        const clipboardRef = database.ref('clipboard/text');
+
+        // Listen for changes in the database and update the textarea
+        clipboardRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                clipboardText.value = data;
+            }
+        });
+
+        // Listen for input in the textarea and update the database
+        clipboardText.addEventListener('input', () => {
+            clipboardRef.set(clipboardText.value);
+        });
+
+        function copyToClipboard() {
+            clipboardText.select();
+            document.execCommand('copy');
+        }
+    </script>
+</body>
+</html>
