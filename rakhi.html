@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>रक्षा बंधन की शुभकामनाएँ!</title>
+    <style>
+        /* --- 
+        *   1. सामान्य सेटअप और फ़ॉन्ट
+        *   --- */
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@404;500;600;700;800&display=swap');
+
+        :root {
+            --bg-color: #1a0b2e;
+            --primary-glow: #ff00ff; /* मजेंटा */
+            --secondary-glow: #00ffff; /* सियान */
+            --tertiary-glow: #ffd700; /* गोल्ड */
+            --text-color: #f0f0f0;
+            --whatsapp-green: #25D366;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* कोई स्क्रॉलिंग नहीं */
+            font-family: 'Baloo Bhai 2', cursive; /* आकर्षक हिंदी फ़ॉन्ट */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ---
+        *   2. लैंडिंग स्क्रीन (प्रकट होने से पहले)
+        *   --- */
+        #landing-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(300deg, #ff00ff, #00ffff, #ffcc00, #ff0000);
+            background-size: 200% 200%;
+            animation: gradient-shift 15s ease infinite, zoom-in-out 8s ease-in-out infinite;
+            transition: opacity 1.5s ease-out;
+            z-index: 100;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes zoom-in-out {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        #landing-screen h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin: 20px;
+        }
+
+        #reveal-button {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            padding: 15px 30px;
+            margin-top: 30px;
+            border: 2px solid white;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px var(--secondary-glow), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            animation: neon-glow-pulse 2s infinite alternate;
+        }
+        
+        @keyframes neon-glow-pulse {
+            from { box-shadow: 0 0 15px var(--secondary-glow), inset 0 0 10px rgba(255,255,255,0.3); }
+            to { box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px rgba(255,255,255,0.5); }
+        }
+
+        #reveal-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* ---
+        *   3. मुख्य उत्सव पेज
+        *   --- */
+        #celebration-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            padding: 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #1a0b2e, #0d1a3a);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease-in, visibility 1.5s;
+            z-index: 50;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            flex-shrink: 0; /* Prevents shrinking when inputs are tall */
+        }
+
+        /* ---
+        *   4. उत्सव टेक्स्ट और राखी इमेज
+        *   --- */
+        #rakhi-title {
+            font-family: 'Baloo Bhai 2', cursive;
+            font-size: clamp(2.5rem, 9vw, 5rem);
+            position: relative;
+            animation: disco-lights 5s linear infinite;
+            z-index: 10;
+            margin-bottom: 10px;
+        }
+
+        @keyframes disco-lights {
+            0%   { color: var(--primary-glow); text-shadow: 0 0 20px var(--primary-glow); }
+            25%  { color: var(--secondary-glow); text-shadow: 0 0 20px var(--secondary-glow); }
+            50%  { color: var(--tertiary-glow); text-shadow: 0 0 20px var(--tertiary-glow); }
+            75%  { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
+            100% { color: var(--primary-glow); text-shadow: 0 0 20px var(--primary-glow); }
+        }
+
+        #rakhi-image-container {
+            position: relative;
+            margin-top: 10px;
+            animation: rakhi-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes rakhi-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        #rakhi-gif {
+            max-width: 90%;
+            width: 250px; /* Base size */
+            height: auto;
+            border-radius: 15px;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 30px 10px rgba(0,0,0,0.5); /* गहराई के लिए स्थिर छाया */
+        }
+        
+        /* एनिमेटेड ग्रेडिएंट छाया */
+        #rakhi-image-container::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow));
+            background-size: 200% 200%;
+            border-radius: 20px;
+            filter: blur(25px);
+            opacity: 0.7;
+            z-index: 1;
+            animation: gradient-shadow-shift 6s linear infinite;
+        }
+
+        @keyframes gradient-shadow-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* ---
+        *   5. शुभकामना संदेश
+        *   --- */
+        #greeting-message {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--secondary-glow);
+            max-width: 90%;
+        }
+
+        #greeting-name {
+            font-weight: 700;
+            animation: name-glow 3s infinite alternate;
+        }
+
+        @keyframes name-glow {
+            from { color: var(--primary-glow); text-shadow: 0 0 10px var(--primary-glow); }
+            to { color: var(--secondary-glow); text-shadow: 0 0 10px var(--secondary-glow); }
+        }
+
+        /* ---
+        *   6. इनपुट और बटन
+        *   --- */
+        .user-interaction-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1; /* Allow to take available space */
+            justify-content: flex-end; /* Push content to bottom */
+            padding-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Stack inputs vertically on small screens */
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        @media (min-width: 600px) {
+            .input-group {
+                flex-direction: row; /* Side-by-side on larger screens */
+            }
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 18px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary-glow);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-sizing: border-box; /* Include padding/border in width */
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--secondary-glow);
+            box-shadow: 0 0 10px var(--secondary-glow);
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .share-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            background-color: var(--whatsapp-green);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+            width: 90%; /* Responsive width */
+            max-width: 300px; /* Max width for consistency */
+            box-sizing: border-box;
+        }
+        
+        .share-button:hover {
+            box-shadow: 0 0 25px var(--whatsapp-green);
+            transform: translateY(-3px);
+        }
+
+        .whatsapp-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ---
+        *   7. उत्सव प्रभाव (कण, फूल)
+        *   --- */
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: var(--primary-glow);
+            border-radius: 50%;
+            animation: fall 5s linear infinite;
+            opacity: 0;
+        }
+
+        .flower {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: fall 10s linear infinite;
+            opacity: 0.8;
+            user-select: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- पृष्ठभूमि संगीत के लिए ऑडियो तत्व -->
+    <audio id="bg-music" loop>
+        <source src="rakhi.mp3" type="audio/mpeg">
+        आपका ब्राउज़र ऑडियो तत्व का समर्थन नहीं करता है।
+    </audio>
+
+    <!-- 1. प्रारंभिक लैंडिंग स्क्रीन -->
+    <div id="landing-screen">
+        <h1>आपके लिए एक विशेष रक्षा बंधन संदेश है!</h1>
+        <button id="reveal-button">देखने के लिए क्लिक करें</button>
+    </div>
+
+    <!-- 2. मुख्य उत्सव पेज -->
+    <div id="celebration-page">
+        
+        <!-- निरंतर उत्सव प्रभावों के लिए कंटेनर -->
+        <div class="particle-container" id="particle-container"></div>
+
+        <div class="content-wrapper">
+            <!-- रक्षा बंधन शुभकामना टेक्स्ट -->
+            <h2 id="rakhi-title">रक्षा बंधन की शुभकामनाएँ</h2>
+
+            <!-- राखी GIF इमेज -->
+            <div id="rakhi-image-container">
+                <img id="rakhi-gif" src="rakhi.gif" alt="एनिमेटेड राखी">
+            </div>
+
+            <!-- शुभकामना संदेश -->
+            <p id="greeting-message">
+                <span id="greeting-name"></span> की ओर से: <span id="greeting-custom-message"></span>
+            </p>
+        </div>
+        
+        <div class="user-interaction-wrapper">
+            <!-- नाम और संदेश इनपुट फ़ील्ड -->
+            <div class="input-group">
+                <input type="text" id="name-input" class="input-field" placeholder="अपना नाम दर्ज करें">
+                <input type="text" id="message-input" class="input-field" placeholder="अपना संदेश लिखें">
+            </div>
+
+            <!-- बटन समूह -->
+            <div class="button-group">
+                <!-- व्हाट्सएप शेयर बटन -->
+                <a id="whatsapp-share-button" href="#" class="share-button" target="_blank">
+                    <svg class="whatsapp-logo" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.37 21.82 12.04 21.82C17.5 21.82 21.95 17.37 21.95 11.91C21.95 6.45 17.5 2 12.04 2ZM17.15 15.28C16.91 15.82 15.96 16.29 15.42 16.35C14.94 16.42 14.31 16.45 13.92 16.29C13.54 16.12 12.78 15.86 11.84 14.99C10.68 13.91 9.94 12.59 9.77 12.31C9.6 12.03 8.89 11.02 8.89 10.03C8.89 9.04 9.49 8.5 9.72 8.26C9.95 8.02 10.25 7.96 10.53 7.96C10.74 7.96 10.93 7.97 11.1 8.01C11.31 8.06 11.49 8.44 11.66 8.76C11.83 9.09 12.13 9.92 12.19 10.03C12.26 10.14 12.23 10.3 12.11 10.42C11.99 10.54 11.83 10.7 11.68 10.87C11.54 11.03 11.39 11.16 11.26 11.3C11.13 11.44 11.01 11.55 11.19 11.82C11.37 12.09 11.89 12.84 12.61 13.48C13.51 14.31 14.18 14.61 14.48 14.75C14.78 14.89 15.02 14.86 15.2 14.68C15.39 14.5 15.79 13.97 16.01 13.68C16.24 13.38 16.47 13.32 16.76 13.43C17.05 13.54 18.01 14.01 18.26 14.26C18.51 14.51 18.62 14.65 18.68 14.81C18.74 14.97 18.74 15.28 17.15 15.28Z"/></svg>
+                    व्हाट्सएप पर साझा करें
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---
+        // *   1. तत्व चयनकर्ता (Element Selectors)
+        // *   ---
+        const landingScreen = document.getElementById('landing-screen');
+        const revealButton = document.getElementById('reveal-button');
+        const celebrationPage = document.getElementById('celebration-page');
+        const bgMusic = document.getElementById('bg-music');
+        const greetingName = document.getElementById('greeting-name');
+        const greetingCustomMessage = document.getElementById('greeting-custom-message');
+        const nameInput = document.getElementById('name-input');
+        const messageInput = document.getElementById('message-input');
+        const whatsappShareButton = document.getElementById('whatsapp-share-button');
+        const particleContainer = document.getElementById('particle-container');
+
+        // ---
+        // *   2. मुख्य तर्क (प्रकट करें, URL पैरामीटर, अपडेट)
+        // *   ---
+        
+        let currentName = 'कोई';
+        let currentMessage = 'आपको रक्षा बंधन की बहुत-बहुत बधाई!';
+
+        // URL पैरामीटर को पार्स करने का फ़ंक्शन
+        function initializeFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nameFromURL = urlParams.get('name');
+            const msgFromURL = urlParams.get('msg');
+            
+            if (nameFromURL) {
+                currentName = decodeURIComponent(nameFromURL); // Decode URI component
+            }
+            if (msgFromURL) {
+                currentMessage = decodeURIComponent(msgFromURL); // Decode URI component
+            }
+
+            updateGreeting();
+            updateInputs();
+        }
+
+        // पेज पर शुभकामना टेक्स्ट को अपडेट करें
+        function updateGreeting() {
+            greetingName.textContent = currentName;
+            greetingCustomMessage.textContent = currentMessage;
+            updateWhatsAppLink();
+        }
+
+        // इनपुट फ़ील्ड को वर्तमान मानों के साथ अपडेट करें
+        function updateInputs() {
+            nameInput.value = (currentName === 'कोई' || currentName === 'Someone') ? '' : currentName; // Handle previous English default too
+            messageInput.value = (currentMessage === 'आपको रक्षा बंधन की बहुत-बहुत बधाई!' || currentMessage === 'wishes you a very Happy Raksha Bandhan!') ? '' : currentMessage; // Handle previous English default too
+        }
+
+        // व्हाट्सएप शेयर लिंक को अपडेट करें
+        function updateWhatsAppLink() {
+            const baseURL = window.location.origin + window.location.pathname;
+            const shareURL = `${baseURL}?name=${encodeURIComponent(currentName)}&msg=${encodeURIComponent(currentMessage)}`;
+            const whatsappMessage = `*${currentName} की ओर से आपके लिए एक विशेष संदेश!* 💌\n\n_${currentMessage}_\n\nपूरा उत्सव यहाँ देखें:\n${shareURL}`;
+            whatsappShareButton.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappMessage)}`;
+        }
+
+        // प्रकट करें बटन के लिए इवेंट लिसनर
+        revealButton.addEventListener('click', () => {
+            // लैंडिंग स्क्रीन को फ़ेड आउट करें
+            landingScreen.style.opacity = '0';
+            setTimeout(() => {
+                landingScreen.classList.add('hidden');
+            }, 1500);
+
+            // उत्सव पेज को फ़ेड इन करें
+            celebrationPage.style.visibility = 'visible';
+            celebrationPage.style.opacity = '1';
+
+            // संगीत चलाएं और प्रभाव शुरू करें
+            bgMusic.play().catch(e => console.error("ऑडियो प्लेबैक विफल रहा:", e));
+            startCelebrationEffects();
+        });
+
+        // इनपुट फ़ील्ड के लिए इवेंट लिसनर
+        nameInput.addEventListener('input', (e) => {
+            currentName = e.target.value.trim() || 'कोई';
+            updateGreeting();
+        });
+
+        messageInput.addEventListener('input', (e) => {
+            currentMessage = e.target.value.trim() || 'आपको रक्षा बंधन की बहुत-बहुत बधाई!';
+            updateGreeting();
+        });
+        
+        // ---
+        // *   3. उत्सव प्रभाव (कण, फूल)
+        // *   ---
+        
+        const flowerEmojis = ['🌸', '💖', '💐', '🌷', '🌺', '🌼', '✨', '🌟'];
+        const neonColors = ['#ff00ff', '#00ffff', '#ffd700', '#00ff00', '#ff5e00'];
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 7 + 3; // 3px से 10px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `-20px`;
+            particle.style.backgroundColor = neonColors[Math.floor(Math.random() * neonColors.length)];
+            
+            const animationDuration = Math.random() * 3 + 4; // 4s से 7s
+            particle.style.animation = `fall ${animationDuration}s linear forwards`;
+
+            particleContainer.appendChild(particle);
+
+            // एनीमेशन के बाद कण हटा दें
+            setTimeout(() => {
+                particle.remove();
+            }, animationDuration * 1000);
+        }
+
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+            
+            flower.style.left = `${Math.random() * 100}%`;
+            flower.style.top = `-30px`;
+            flower.style.fontSize = `${Math.random() * 1 + 1}rem`; // 1rem से 2rem
+            
+            const animationDuration = Math.random() * 5 + 8; // 8s से 13s
+            const sway = `translateX(${Math.random() * 100 - 50}px)`;
+            
+            flower.animate([
+                { transform: `translateY(-30px) rotate(0deg) ${sway}`, opacity: 1 },
+                { transform: `translateY(100vh) rotate(720deg) ${sway}`, opacity: 0 }
+            ], {
+                duration: animationDuration * 1000,
+                easing: 'linear'
+            });
+
+            particleContainer.appendChild(flower);
+
+            // एनीमेशन के बाद फूल हटा दें
+            setTimeout(() => {
+                flower.remove();
+            }, animationDuration * 1000);
+        }
+
+        function startCelebrationEffects() {
+            // संगीत-प्रतिक्रियात्मक प्रभाव को कणों को अंतराल पर बनाकर अनुकरण करें
+            setInterval(createParticle, 100); // कंफ़ेटी अनुभव के लिए अधिक बार
+            setInterval(createFlower, 400); // गिरते फूलों के लिए कम बार
+        }
+
+        // ---
+        // *   4. प्रारंभिक पेज लोड
+        // *   ---
+        document.addEventListener('DOMContentLoaded', initializeFromURL);
+    </script>
+</body>
+</html>
