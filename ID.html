@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Independence Day</title>
+    <style>
+        /* Layout & Theme */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        html, body {
+            min-height: 100%;
+        }
+
+        body {
+            color: white;
+            text-align: center;
+            background: linear-gradient(135deg, #1a0033, #0d001a);
+            overflow-y: auto;
+        }
+
+        .container {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Landing Screen */
+        .landing-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            background: linear-gradient(45deg, #ff4500, #ff8c00, #ffd700, #90ee90, #00bfff, #9370db);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            transition: opacity 0.5s ease;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .landing-screen h1 {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+
+        .reveal-btn {
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5),
+                        0 0 30px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reveal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+                        0 0 40px rgba(255, 215, 0, 0.8);
+        }
+
+        .reveal-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+
+        /* Main Celebration Page */
+        .celebration-screen {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background: linear-gradient(to bottom, #1a0033, #0d001a);
+            position: relative;
+        }
+
+        .celebration-screen::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, rgba(255, 153, 51, 0.1) 0%, transparent 20%),
+                linear-gradient(225deg, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+                linear-gradient(315deg, rgba(19, 136, 8, 0.1) 0%, transparent 20%),
+                linear-gradient(45deg, rgba(0, 87, 184, 0.1) 0%, transparent 20%);
+            z-index: -1;
+        }
+
+        .hero-gif {
+            max-width: 100%;
+            max-height: 40vh;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 153, 51, 0.5),
+                        0 0 40px rgba(255, 255, 255, 0.3),
+                        0 0 60px rgba(19, 136, 8, 0.3),
+                        0 0 80px rgba(0, 87, 184, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+            margin: 10px 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .heading {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            margin: 10px 0;
+            background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: colorChange 5s linear infinite;
+        }
+
+        @keyframes colorChange {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .greeting {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            margin: 15px 0;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            max-width: 90%;
+        }
+
+        .name {
+            color: #ff9933;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 153, 51, 0.7);
+            animation: nameGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes nameGlow {
+            0% { text-shadow: 0 0 10px rgba(255, 153, 51, 0.7); }
+            100% { text-shadow: 0 0 20px rgba(255, 153, 51, 1), 0 0 30px rgba(255, 215, 0, 0.7); }
+        }
+
+        .message {
+            color: #ffffff;
+            font-weight: normal;
+        }
+
+        /* Inputs & Share */
+        .input-section {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ff9933;
+            box-shadow: 0 0 10px rgba(255, 153, 51, 0.5);
+        }
+
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        .share-btn {
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            background-color: #25D366;
+            color: white;
+            box-shadow: 0 0 10px rgba(37, 211, 102, 0.5);
+            width: 100%;
+        }
+
+        .share-btn:hover {
+            background-color: #128C7E;
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.8);
+        }
+
+        /* Celebration Effects */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        .emoji-rain {
+            position: fixed;
+            font-size: 24px;
+            z-index: 2;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .balloon {
+            position: fixed;
+            border-radius: 50%;
+            z-index: 1;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+            animation: float 10s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        /* Canvas for music visualization */
+        .visualizer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Accessibility & Reduced Motion */
+        @media (prefers-reduced-motion) {
+            .reveal-btn::before,
+            .hero-gif,
+            .heading,
+            .name,
+            .balloon,
+            .confetti,
+            .emoji-rain {
+                animation: none !important;
+            }
+
+            .reveal-btn:hover {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Screen -->
+    <div class="container landing-screen" id="landingScreen">
+        <h1>Special Independence Day message waiting for you</h1>
+        <button class="reveal-btn" id="revealBtn">Click to Reveal</button>
+    </div>
+
+    <!-- Celebration Screen -->
+    <div class="container celebration-screen" id="celebrationScreen">
+        <canvas class="visualizer" id="visualizer"></canvas>
+        
+        <h1 class="heading">Happy Independence Day</h1>
+        <img src="https://i.giphy.com/6RL0oPQQuWlrCFcnkL.webp" alt="Indian Flag" class="hero-gif">
+        
+        <div class="greeting">
+            <span class="name" id="displayName">Someone</span> ki taraf se: 
+            <span class="message" id="displayMessage">aapko Swatantrata Diwas ki hardik shubhkamnayein</span>
+        </div>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label for="nameInput">Enter your name</label>
+                <input type="text" id="nameInput" placeholder="Your name">
+            </div>
+            <div class="input-group">
+                <label for="messageInput">Type your message</label>
+                <textarea id="messageInput" placeholder="Your Independence Day message"></textarea>
+            </div>
+            
+            <button class="share-btn" id="shareBtn">
+                <span>Share via WhatsApp</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* URL Params & State */
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                name: params.get('name') || '',
+                msg: params.get('msg') || ''
+            };
+        }
+
+        function updateGreeting() {
+            const params = getUrlParams();
+            const nameInput = document.getElementById('nameInput');
+            const messageInput = document.getElementById('messageInput');
+            const displayName = document.getElementById('displayName');
+            const displayMessage = document.getElementById('displayMessage');
+            
+            if (params.name) {
+                nameInput.value = params.name;
+                displayName.textContent = params.name;
+            }
+            
+            if (params.msg) {
+                messageInput.value = params.msg;
+                displayMessage.textContent = params.msg;
+            }
+        }
+
+        /* Audio & Music-Reactive */
+        let audioContext;
+        let analyser;
+        let dataArray;
+        let audioSource;
+        let audioElement;
+        let isPlaying = false;
+
+        function setupAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            
+            audioElement = new Audio('anthem.mp3');
+            audioElement.loop = true;
+            
+            audioSource = audioContext.createMediaElementSource(audioElement);
+            audioSource.connect(analyser);
+            analyser.connect(audioContext.destination);
+            
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+        }
+
+        function startAudio() {
+            if (isPlaying) return;
+            
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            audioElement.play()
+                .then(() => {
+                    isPlaying = true;
+                    startVisualization();
+                    startCelebrationEffects();
+                })
+                .catch(error => {
+                    console.error('Audio playback failed:', error);
+                });
+        }
+
+        /* Celebrations: Confetti, Balloons, Emojis */
+        function createConfetti(x, y, color) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = `${x}px`;
+            confetti.style.top = `${y}px`;
+            confetti.style.backgroundColor = color;
+            
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 2 + Math.random() * 3;
+            const rotation = Math.random() * 360;
+            const rotationSpeed = (Math.random() - 0.5) * 10;
+            
+            let posX = x;
+            let posY = y;
+            let opacity = 1;
+            
+            function animate() {
+                posX += Math.cos(angle) * velocity;
+                posY += Math.sin(angle) * velocity + 1; // gravity
+                rotation += rotationSpeed;
+                opacity -= 0.01;
+                
+                confetti.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
+                confetti.style.opacity = opacity;
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    confetti.remove();
+                }
+            }
+            
+            document.body.appendChild(confetti);
+            requestAnimationFrame(animate);
+        }
+
+        function createEmoji() {
+            const emojis = ['🇮🇳', '🎆', '🎇', '✨', '🌟'];
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji-rain';
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            const startX = Math.random() * window.innerWidth;
+            const swayAmount = 50 + Math.random() * 100;
+            const swaySpeed = 0.5 + Math.random() * 1;
+            const fallSpeed = 1 + Math.random() * 3;
+            const rotationSpeed = (Math.random() - 0.5) * 4;
+            
+            let posY = -50;
+            let posX = startX;
+            let rotation = 0;
+            let swayPhase = Math.random() * Math.PI * 2;
+            
+            function animate() {
+                posY += fallSpeed;
+                swayPhase += swaySpeed * 0.01;
+                posX = startX + Math.sin(swayPhase) * swayAmount;
+                rotation += rotationSpeed;
+                
+                emoji.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
+                
+                if (posY < window.innerHeight) {
+                    requestAnimationFrame(animate);
+                } else {
+                    emoji.remove();
+                }
+            }
+            
+            document.body.appendChild(emoji);
+            requestAnimationFrame(animate);
+        }
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            
+            const colors = ['#ff9933', '#ffffff', '#138808', '#0066b4'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const size = 30 + Math.random() * 50;
+            
+            balloon.style.width = `${size}px`;
+            balloon.style.height = `${size}px`;
+            balloon.style.backgroundColor = color;
+            balloon.style.left = `${Math.random() * window.innerWidth}px`;
+            
+            // Neon glow effect
+            balloon.style.boxShadow = `0 0 ${size/2}px ${size/3}px ${color}40`;
+            
+            // Random float duration and delay
+            const duration = 15 + Math.random() * 15;
+            balloon.style.animationDuration = `${duration}s`;
+            balloon.style.animationDelay = `${Math.random() * 5}s`;
+            
+            document.body.appendChild(balloon);
+            
+            // Remove balloon after animation completes
+            setTimeout(() => {
+                balloon.remove();
+            }, duration * 1000);
+        }
+
+        function startCelebrationEffects() {
+            // Start emoji rain
+            setInterval(createEmoji, 500);
+            
+            // Start balloons
+            setInterval(createBalloon, 1000);
+            
+            // Confetti bursts based on music
+            setInterval(() => {
+                if (!isPlaying) return;
+                
+                analyser.getByteFrequencyData(dataArray);
+                const energy = dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length;
+                
+                if (energy > 50) {
+                    const count = Math.floor(energy / 20);
+                    for (let i = 0; i < count; i++) {
+                        const x = Math.random() * window.innerWidth;
+                        const y = window.innerHeight - 50;
+                        const colors = ['#ff9933', '#ffffff', '#138808'];
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        createConfetti(x, y, color);
+                    }
+                }
+            }, 100);
+        }
+
+        /* Visualization */
+        function startVisualization() {
+            const canvas = document.getElementById('visualizer');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            function draw() {
+                if (!isPlaying) return;
+                
+                analyser.getByteFrequencyData(dataArray);
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const barWidth = (canvas.width / dataArray.length) * 2.5;
+                let x = 0;
+                
+                for (let i = 0; i < dataArray.length; i++) {
+                    const barHeight = dataArray[i] / 2;
+                    
+                    // Create tricolor gradient based on frequency
+                    const gradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
+                    
+                    if (i < dataArray.length / 3) {
+                        gradient.addColorStop(0, '#ff9933');
+                        gradient.addColorStop(1, '#ff993355');
+                    } else if (i < (dataArray.length / 3) * 2) {
+                        gradient.addColorStop(0, '#ffffff');
+                        gradient.addColorStop(1, '#ffffff55');
+                    } else {
+                        gradient.addColorStop(0, '#138808');
+                        gradient.addColorStop(1, '#13880855');
+                    }
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                    
+                    x += barWidth + 1;
+                }
+                
+                requestAnimationFrame(draw);
+            }
+            
+            draw();
+        }
+
+        /* Inputs & Share */
+        function setupInputs() {
+            const nameInput = document.getElementById('nameInput');
+            const messageInput = document.getElementById('messageInput');
+            const displayName = document.getElementById('displayName');
+            const displayMessage = document.getElementById('displayMessage');
+            const shareBtn = document.getElementById('shareBtn');
+            
+            nameInput.addEventListener('input', () => {
+                displayName.textContent = nameInput.value || 'Someone';
+            });
+            
+            messageInput.addEventListener('input', () => {
+                displayMessage.textContent = messageInput.value || 'aapko Swatantrata Diwas ki hardik shubhkamnayein';
+            });
+            
+            shareBtn.addEventListener('click', () => {
+                const name = nameInput.value || 'Someone';
+                const msg = messageInput.value || 'aapko Swatantrata Diwas ki hardik shubhkamnayein';
+                
+                const shareText = `${name} ki taraf se: ${msg}`;
+                const shareUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}&msg=${encodeURIComponent(msg)}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Independence Day Greetings',
+                        text: shareText,
+                        url: shareUrl
+                    }).catch(console.error);
+                } else {
+                    // Fallback for WhatsApp
+                    window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+                }
+            });
+        }
+
+        /* Initialize */
+        function init() {
+            // Check URL params and update greeting
+            updateGreeting();
+            
+            // Setup audio
+            setupAudio();
+            
+            // Setup input handlers
+            setupInputs();
+            
+            // Reveal button handler
+            document.getElementById('revealBtn').addEventListener('click', () => {
+                document.getElementById('landingScreen').style.opacity = '0';
+                document.getElementById('celebrationScreen').style.opacity = '1';
+                
+                // Start audio after user interaction
+                startAudio();
+                
+                // Remove landing screen after transition
+                setTimeout(() => {
+                    document.getElementById('landingScreen').style.display = 'none';
+                }, 500);
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const canvas = document.getElementById('visualizer');
+                if (canvas) {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                }
+            });
+        }
+
+        // Start everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
