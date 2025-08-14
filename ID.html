@@ -131,7 +131,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 linear-gradient(135deg, rgba(255, 153, 51, 0.1) 0%, transparent 20%),
                 linear-gradient(225deg, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
                 linear-gradient(315deg, rgba(19, 136, 8, 0.1) 0%, transparent 20%),
@@ -339,15 +339,15 @@
     <!-- Celebration Screen -->
     <div class="container celebration-screen" id="celebrationScreen">
         <canvas class="visualizer" id="visualizer"></canvas>
-        
+
         <h1 class="heading">Happy Independence Day</h1>
         <img src="https://i.giphy.com/6RL0oPQQuWlrCFcnkL.webp" alt="Indian Flag" class="hero-gif">
-        
+
         <div class="greeting">
-            <span class="name" id="displayName">Someone</span> ki taraf se: 
+            <span class="name" id="displayName">Someone</span> ki taraf se:
             <span class="message" id="displayMessage">aapko Swatantrata Diwas ki hardik shubhkamnayein</span>
         </div>
-        
+
         <div class="input-section">
             <div class="input-group">
                 <label for="nameInput">Enter your name</label>
@@ -357,7 +357,7 @@
                 <label for="messageInput">Type your message</label>
                 <textarea id="messageInput" placeholder="Your Independence Day message"></textarea>
             </div>
-            
+
             <button class="share-btn" id="shareBtn">
                 <span>Share via WhatsApp</span>
             </button>
@@ -380,12 +380,12 @@
             const messageInput = document.getElementById('messageInput');
             const displayName = document.getElementById('displayName');
             const displayMessage = document.getElementById('displayMessage');
-            
+
             if (params.name) {
                 nameInput.value = params.name;
                 displayName.textContent = params.name;
             }
-            
+
             if (params.msg) {
                 messageInput.value = params.msg;
                 displayMessage.textContent = params.msg;
@@ -404,25 +404,26 @@
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioContext.createAnalyser();
             analyser.fftSize = 256;
-            
+
+            // Note: You need an 'anthem.mp3' file in the same directory for the music to work.
             audioElement = new Audio('anthem.mp3');
             audioElement.loop = true;
-            
+
             audioSource = audioContext.createMediaElementSource(audioElement);
             audioSource.connect(analyser);
             analyser.connect(audioContext.destination);
-            
+
             const bufferLength = analyser.frequencyBinCount;
             dataArray = new Uint8Array(bufferLength);
         }
 
         function startAudio() {
             if (isPlaying) return;
-            
+
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
             }
-            
+
             audioElement.play()
                 .then(() => {
                     isPlaying = true;
@@ -430,7 +431,7 @@
                     startCelebrationEffects();
                 })
                 .catch(error => {
-                    console.error('Audio playback failed:', error);
+                    console.error('Audio playback failed. Make sure anthem.mp3 is available and the browser allows autoplay.', error);
                 });
         }
 
@@ -441,68 +442,69 @@
             confetti.style.left = `${x}px`;
             confetti.style.top = `${y}px`;
             confetti.style.backgroundColor = color;
-            
+
             const angle = Math.random() * Math.PI * 2;
             const velocity = 2 + Math.random() * 3;
             const rotation = Math.random() * 360;
             const rotationSpeed = (Math.random() - 0.5) * 10;
-            
+
             let posX = x;
             let posY = y;
             let opacity = 1;
-            
+
             function animate() {
                 posX += Math.cos(angle) * velocity;
                 posY += Math.sin(angle) * velocity + 1; // gravity
                 rotation += rotationSpeed;
                 opacity -= 0.01;
-                
-                confetti.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
+
+                confetti.style.transform = `translate(${posX - x}px, ${posY - y}px) rotate(${rotation}deg)`;
                 confetti.style.opacity = opacity;
-                
+
                 if (opacity > 0) {
                     requestAnimationFrame(animate);
                 } else {
                     confetti.remove();
                 }
             }
-            
+
             document.body.appendChild(confetti);
             requestAnimationFrame(animate);
         }
 
         function createEmoji() {
-            const emojis = [];
+            // FIX: The array is now populated with emojis.
+            const emojis = ['🇮🇳', '🧡', '🤍', '💚', '✨', '🎉', '🕊️', '🙏'];
             const emoji = document.createElement('div');
             emoji.className = 'emoji-rain';
             emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-            
+
             const startX = Math.random() * window.innerWidth;
             const swayAmount = 50 + Math.random() * 100;
             const swaySpeed = 0.5 + Math.random() * 1;
             const fallSpeed = 1 + Math.random() * 3;
             const rotationSpeed = (Math.random() - 0.5) * 4;
-            
+
             let posY = -50;
             let posX = startX;
             let rotation = 0;
             let swayPhase = Math.random() * Math.PI * 2;
-            
+
             function animate() {
                 posY += fallSpeed;
                 swayPhase += swaySpeed * 0.01;
                 posX = startX + Math.sin(swayPhase) * swayAmount;
                 rotation += rotationSpeed;
-                
+
                 emoji.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
-                
-                if (posY < window.innerHeight) {
+
+                if (posY < window.innerHeight + 50) { // check beyond the bottom of the screen
                     requestAnimationFrame(animate);
                 } else {
                     emoji.remove();
                 }
             }
-            
+
             document.body.appendChild(emoji);
             requestAnimationFrame(animate);
         }
@@ -510,51 +512,51 @@
         function createBalloon() {
             const balloon = document.createElement('div');
             balloon.className = 'balloon';
-            
+
             const colors = ['#ff9933', '#ffffff', '#138808', '#0066b4'];
             const color = colors[Math.floor(Math.random() * colors.length)];
             const size = 30 + Math.random() * 50;
-            
+
             balloon.style.width = `${size}px`;
             balloon.style.height = `${size}px`;
             balloon.style.backgroundColor = color;
-            balloon.style.left = `${Math.random() * window.innerWidth}px`;
-            
+            balloon.style.left = `${Math.random() * 100}vw`;
+
             // Neon glow effect
-            balloon.style.boxShadow = `0 0 ${size/2}px ${size/3}px ${color}40`;
-            
+            balloon.style.boxShadow = `0 0 ${size/2}px ${color}, 0 0 ${size/3}px ${color}80`;
+
             // Random float duration and delay
             const duration = 15 + Math.random() * 15;
             balloon.style.animationDuration = `${duration}s`;
             balloon.style.animationDelay = `${Math.random() * 5}s`;
-            
+
             document.body.appendChild(balloon);
-            
-            // Remove balloon after animation completes
+
+            // Remove balloon after animation completes to prevent DOM clutter
             setTimeout(() => {
                 balloon.remove();
-            }, duration * 1000);
+            }, (duration + 5) * 1000);
         }
 
         function startCelebrationEffects() {
             // Start emoji rain
-            setInterval(createEmoji, 500);
-            
+            setInterval(createEmoji, 300);
+
             // Start balloons
-            setInterval(createBalloon, 1000);
-            
+            setInterval(createBalloon, 800);
+
             // Confetti bursts based on music
             setInterval(() => {
-                if (!isPlaying) return;
-                
+                if (!isPlaying || !dataArray) return;
+
                 analyser.getByteFrequencyData(dataArray);
                 const energy = dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length;
-                
-                if (energy > 50) {
-                    const count = Math.floor(energy / 20);
+
+                if (energy > 50) { // Trigger confetti on musical "peaks"
+                    const count = Math.floor(energy / 25);
                     for (let i = 0; i < count; i++) {
                         const x = Math.random() * window.innerWidth;
-                        const y = window.innerHeight - 50;
+                        const y = Math.random() * window.innerHeight;
                         const colors = ['#ff9933', '#ffffff', '#138808'];
                         const color = colors[Math.floor(Math.random() * colors.length)];
                         createConfetti(x, y, color);
@@ -567,26 +569,28 @@
         function startVisualization() {
             const canvas = document.getElementById('visualizer');
             const ctx = canvas.getContext('2d');
-            
+
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
+
             function draw() {
                 if (!isPlaying) return;
-                
+
+                requestAnimationFrame(draw);
+
                 analyser.getByteFrequencyData(dataArray);
-                
+
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
+
                 const barWidth = (canvas.width / dataArray.length) * 2.5;
                 let x = 0;
-                
+
                 for (let i = 0; i < dataArray.length; i++) {
                     const barHeight = dataArray[i] / 2;
-                    
+
                     // Create tricolor gradient based on frequency
                     const gradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
-                    
+
                     if (i < dataArray.length / 3) {
                         gradient.addColorStop(0, '#ff9933');
                         gradient.addColorStop(1, '#ff993355');
@@ -597,16 +601,14 @@
                         gradient.addColorStop(0, '#138808');
                         gradient.addColorStop(1, '#13880855');
                     }
-                    
+
                     ctx.fillStyle = gradient;
                     ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                    
+
                     x += barWidth + 1;
                 }
-                
-                requestAnimationFrame(draw);
             }
-            
+
             draw();
         }
 
@@ -617,31 +619,34 @@
             const displayName = document.getElementById('displayName');
             const displayMessage = document.getElementById('displayMessage');
             const shareBtn = document.getElementById('shareBtn');
-            
+
             nameInput.addEventListener('input', () => {
                 displayName.textContent = nameInput.value || 'Someone';
             });
-            
+
             messageInput.addEventListener('input', () => {
                 displayMessage.textContent = messageInput.value || 'aapko Swatantrata Diwas ki hardik shubhkamnayein';
             });
-            
+
             shareBtn.addEventListener('click', () => {
                 const name = nameInput.value || 'Someone';
                 const msg = messageInput.value || 'aapko Swatantrata Diwas ki hardik shubhkamnayein';
-                
-                const shareText = `${name} ki taraf se: ${msg}`;
+
+                const greetingText = `*${name}* ki taraf se aapko Independence Day ki hardik shubhkamnayein! 🇮🇳`;
+                const customMessage = msg !== 'aapko Swatantrata Diwas ki hardik shubhkamnayein' ? `\n\nMessage: _${msg}_` : '';
                 const shareUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}&msg=${encodeURIComponent(msg)}`;
-                
+                const fullText = `${greetingText}${customMessage}\n\nCreate your own greeting here:\n${shareUrl}`;
+
+
                 if (navigator.share) {
                     navigator.share({
                         title: 'Independence Day Greetings',
-                        text: shareText,
+                        text: fullText,
                         url: shareUrl
                     }).catch(console.error);
                 } else {
-                    // Fallback for WhatsApp
-                    window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+                    // Fallback for WhatsApp on desktop
+                    window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, '_blank');
                 }
             });
         }
@@ -650,27 +655,26 @@
         function init() {
             // Check URL params and update greeting
             updateGreeting();
-            
-            // Setup audio
-            setupAudio();
-            
+
             // Setup input handlers
             setupInputs();
-            
+
             // Reveal button handler
             document.getElementById('revealBtn').addEventListener('click', () => {
                 document.getElementById('landingScreen').style.opacity = '0';
                 document.getElementById('celebrationScreen').style.opacity = '1';
-                
-                // Start audio after user interaction
+
+                // Setup and start audio after user interaction
+                // This is necessary because browsers block autoplay
+                setupAudio();
                 startAudio();
-                
+
                 // Remove landing screen after transition
                 setTimeout(() => {
                     document.getElementById('landingScreen').style.display = 'none';
                 }, 500);
             });
-            
+
             // Handle window resize
             window.addEventListener('resize', () => {
                 const canvas = document.getElementById('visualizer');
