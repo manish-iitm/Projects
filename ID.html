@@ -1,660 +1,507 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Independence Day</title>
+    <title>स्वतंत्रता दिवस की शुभकामनाएँ!</title>
     <style>
-        /* Layout & Theme */
-        * {
+        /* ---
+        *   1. सामान्य सेटअप और फ़ॉन्ट
+        *   --- */
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@404;500;600;700;800&display=swap');
+
+        :root {
+            --bg-color: #1a0b2e;
+            --primary-glow: #FF9933; /* केसरिया */
+            --secondary-glow: #FFFFFF; /* सफ़ेद */
+            --tertiary-glow: #138808; /* हरा */
+            --text-color: #f0f0f0;
+            --whatsapp-green: #25D366;
+        }
+
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            width: 100%;
+            overflow-x: hidden;
+            font-family: 'Baloo Bhai 2', cursive;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
         }
 
-        html, body {
-            min-height: 100%;
+        .hidden {
+            display: none !important;
         }
 
-        body {
-            color: white;
+        /* ---
+        *   2. लैंडिंग स्क्रीन (प्रकट होने से पहले)
+        *   --- */
+        #landing-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
             text-align: center;
-            background: linear-gradient(135deg, #1a0033, #0d001a);
-            overflow-y: auto;
-            overflow-x: hidden; /* Prevent horizontal scroll from effects */
-        }
-
-        .container {
-            min-height: 100vh;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
+            height: 100vh;
+            background: linear-gradient(300deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow), #000080);
+            background-size: 200% 200%;
+            animation: gradient-shift 15s ease infinite, zoom-in-out 8s ease-in-out infinite;
+            transition: opacity 1.5s ease-out;
+            z-index: 100;
         }
 
-        /* Landing Screen */
-        .landing-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            background: linear-gradient(45deg, #ff4500, #ff8c00, #ffd700, #90ee90, #00bfff, #9370db);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            transition: opacity 0.5s ease;
-        }
-
-        @keyframes gradientBG {
+        @keyframes gradient-shift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        .landing-screen h1 {
-            font-size: clamp(1.5rem, 5vw, 3rem);
-            margin-bottom: 2rem;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        @keyframes zoom-in-out {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
-        .reveal-btn {
-            padding: 12px 24px;
-            font-size: 1.2rem;
-            border: none;
+        #landing-screen h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin: 20px;
+        }
+
+        #reveal-button {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            padding: 15px 30px;
+            margin-top: 30px;
+            border: 2px solid white;
             border-radius: 50px;
-            background: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
             color: white;
             cursor: pointer;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5),
-                        0 0 30px rgba(255, 215, 0, 0.5);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 0 15px var(--secondary-glow), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            animation: neon-glow-pulse 2s infinite alternate;
         }
 
-        .reveal-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
-                        0 0 40px rgba(255, 215, 0, 0.8);
+        @keyframes neon-glow-pulse {
+            from { box-shadow: 0 0 15px var(--secondary-glow), inset 0 0 10px rgba(255,255,255,0.3); }
+            to { box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px rgba(255,255,255,0.5); }
         }
 
-        .reveal-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.3) 50%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            transform: rotate(30deg);
-            animation: shine 3s infinite;
+        #reveal-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
         }
 
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(30deg); }
-            100% { transform: translateX(100%) rotate(30deg); }
-        }
-
-        /* Main Celebration Page */
-        .celebration-screen {
-            width: 100%;
-            min-height: 100vh;
+        /* ---
+        *   3. मुख्य उत्सव पेज
+        *   --- */
+        #celebration-page {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            padding: 20px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            background: linear-gradient(to bottom, #1a0033, #0d001a);
-            position: relative;
-        }
-
-        .celebration-screen::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
+            justify-content: center;
             width: 100%;
-            height: 100%;
-            background:
-                linear-gradient(135deg, rgba(255, 153, 51, 0.1) 0%, transparent 20%),
-                linear-gradient(225deg, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
-                linear-gradient(315deg, rgba(19, 136, 8, 0.1) 0%, transparent 20%),
-                linear-gradient(45deg, rgba(0, 87, 184, 0.1) 0%, transparent 20%);
-            z-index: -1;
+            min-height: 100vh;
+            padding: 50px 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #1a0b2e, #0d1a3a);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease-in, visibility 1.5s;
+            z-index: 50;
         }
 
-        .hero-gif {
-            max-width: 100%;
-            max-height: 40vh;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 153, 51, 0.5),
-                        0 0 40px rgba(255, 255, 255, 0.3),
-                        0 0 60px rgba(19, 136, 8, 0.3),
-                        0 0 80px rgba(0, 87, 184, 0.3);
-            animation: pulse 3s ease-in-out infinite;
-            margin: 10px 0;
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
         }
 
-        @keyframes pulse {
+        /* ---
+        *   4. उत्सव टेक्स्ट और ध्वज इमेज
+        *   --- */
+        #flag-title {
+            font-family: 'Baloo Bhai 2', cursive;
+            font-size: clamp(2.5rem, 9vw, 5rem);
+            position: relative;
+            animation: disco-lights 5s linear infinite;
+            z-index: 10;
+            margin-bottom: 10px;
+        }
+
+        @keyframes disco-lights {
+            0%   { color: var(--primary-glow); text-shadow: 0 0 20px var(--primary-glow); }
+            33%  { color: var(--secondary-glow); text-shadow: 0 0 20px var(--secondary-glow); }
+            66%  { color: var(--tertiary-glow); text-shadow: 0 0 20px var(--tertiary-glow); }
+            100% { color: var(--primary-glow); text-shadow: 0 0 20px var(--primary-glow); }
+        }
+
+        #flag-image-container {
+            position: relative;
+            margin-top: 20px;
+            animation: flag-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes flag-pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+            50% { transform: scale(1.05); }
         }
 
-        .heading {
-            font-size: clamp(1.8rem, 6vw, 3.5rem);
-            margin: 10px 0;
-            background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            animation: colorChange 5s linear infinite;
+        #flag-gif {
+            max-width: 90%;
+            width: 300px; /* Adjust size as needed */
+            height: auto;
+            border-radius: 15px;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 30px 10px rgba(0,0,0,0.5);
         }
 
-        @keyframes colorChange {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+        #flag-image-container::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow), var(--tertiary-glow));
+            background-size: 200% 200%;
+            border-radius: 20px;
+            filter: blur(25px);
+            opacity: 0.7;
+            z-index: 1;
+            animation: gradient-shadow-shift 6s linear infinite;
         }
 
-        .greeting {
+        @keyframes gradient-shadow-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ---
+        *   5. शुभकामना संदेश
+        *   --- */
+        #greeting-message {
             font-size: clamp(1.2rem, 4vw, 2rem);
-            margin: 15px 0;
-            padding: 10px 20px;
+            margin: 40px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--secondary-glow);
             max-width: 90%;
         }
 
-        .name {
-            color: #ff9933;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 153, 51, 0.7);
-            animation: nameGlow 2s ease-in-out infinite alternate;
+        #greeting-name {
+            font-weight: 700;
+            animation: name-glow 3s infinite alternate;
         }
 
-        @keyframes nameGlow {
-            0% { text-shadow: 0 0 10px rgba(255, 153, 51, 0.7); }
-            100% { text-shadow: 0 0 20px rgba(255, 153, 51, 1), 0 0 30px rgba(255, 215, 0, 0.7); }
+        @keyframes name-glow {
+            from { color: var(--primary-glow); text-shadow: 0 0 10px var(--primary-glow); }
+            to { color: var(--tertiary-glow); text-shadow: 0 0 10px var(--tertiary-glow); }
         }
 
-        .message {
-            color: #ffffff;
-            font-weight: normal;
-        }
-
-        /* Inputs & Share */
-        .input-section {
+        /* ---
+        *   6. इनपुट और बटन
+        *   --- */
+        .user-interaction-wrapper {
             width: 100%;
-            max-width: 500px;
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
         }
 
         .input-group {
-            margin-bottom: 15px;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 90%;
+            max-width: 600px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: #ffffff;
+        @media (min-width: 600px) {
+            .input-group {
+                flex-direction: row;
+            }
         }
 
-        input, textarea {
+        .input-field {
             width: 100%;
-            padding: 10px;
+            padding: 12px 18px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary-glow);
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-sizing: border-box;
         }
 
-        input:focus, textarea:focus {
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-field:focus {
             outline: none;
-            border-color: #ff9933;
-            box-shadow: 0 0 10px rgba(255, 153, 51, 0.5);
+            border-color: var(--secondary-glow);
+            box-shadow: 0 0 10px var(--secondary-glow);
         }
 
-        textarea {
-            resize: none;
-            height: 80px;
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
         }
 
-        .share-btn {
-            padding: 12px 20px;
-            border-radius: 50px;
-            border: none;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
+        .share-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            background-color: #25D366;
+            gap: 10px;
+            text-decoration: none;
+            background-color: var(--whatsapp-green);
             color: white;
-            box-shadow: 0 0 10px rgba(37, 211, 102, 0.5);
-            width: 100%;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+            width: 90%;
+            max-width: 300px;
+            box-sizing: border-box;
         }
 
-        .share-btn:hover {
-            background-color: #128C7E;
-            box-shadow: 0 0 15px rgba(37, 211, 102, 0.8);
+        .share-button:hover {
+            box-shadow: 0 0 25px var(--whatsapp-green);
+            transform: translateY(-3px);
         }
 
-        /* Celebration Effects */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background-color: #f00;
-            opacity: 0.8;
-            z-index: 1;
-            pointer-events: none;
+        .whatsapp-logo {
+            width: 24px;
+            height: 24px;
         }
 
-        .emoji-rain {
-            position: fixed;
-            font-size: 24px;
-            z-index: 2;
-            user-select: none;
-            pointer-events: none;
-            /* FIX: Add a text shadow to make emojis more visible and improve rendering. */
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
-        }
-
-        .balloon {
-            position: fixed;
-            border-radius: 50%;
-            z-index: 1;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
-            animation: float 10s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); }
-            100% { transform: translateY(-100px) rotate(360deg); }
-        }
-
-        /* Canvas for music visualization */
-        .visualizer {
+        /* ---
+        *   7. उत्सव प्रभाव (कण, फूल)
+        *   --- */
+        .particle-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            opacity: 0.3;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 99;
         }
 
-        /* Accessibility & Reduced Motion */
-        @media (prefers-reduced-motion) {
-            .reveal-btn::before,
-            .hero-gif,
-            .heading,
-            .name,
-            .balloon,
-            .confetti,
-            .emoji-rain {
-                animation: none !important;
-            }
+        .particle {
+            position: absolute;
+            background-color: var(--primary-glow);
+            border-radius: 50%;
+            animation: fall 5s linear infinite;
+            opacity: 0;
+        }
 
-            .reveal-btn:hover {
-                transform: none !important;
+        .flower {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: fall 10s linear infinite;
+            opacity: 0.8;
+            user-select: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Landing Screen -->
-    <div class="container landing-screen" id="landingScreen">
-        <h1>Special Independence Day message waiting for you</h1>
-        <button class="reveal-btn" id="revealBtn">Click to Reveal</button>
+
+    <audio id="bg-music" loop>
+        <source src="https://github.com/manish-iitm/Projects/raw/refs/heads/main/anthem.mp3" type="audio/mpeg">
+        आपका ब्राउज़र ऑडियो तत्व का समर्थन नहीं करता है।
+    </audio>
+
+    <div id="landing-screen">
+        <h1>आपके लिए एक विशेष स्वतंत्रता दिवस संदेश है!</h1>
+        <button id="reveal-button">देखने के लिए क्लिक करें</button>
     </div>
 
-    <!-- Celebration Screen -->
-    <div class="container celebration-screen" id="celebrationScreen">
-        <canvas class="visualizer" id="visualizer"></canvas>
+    <div class="particle-container" id="particle-container"></div>
 
-        <h1 class="heading">Happy Independence Day</h1>
-        <img src="https://i.giphy.com/6RL0oPQQuWlrCFcnkL.webp" alt="Indian Flag" class="hero-gif">
-
-        <div class="greeting">
-            <span class="name" id="displayName">Someone</span> ki taraf se:
-            <span class="message" id="displayMessage">aapko Swatantrata Diwas ki hardik shubhkamnayein</span>
+    <main id="celebration-page">
+        <div class="content-wrapper">
+            <h2 id="flag-title">स्वतंत्रता दिवस की शुभकामनाएँ</h2>
+            <div id="flag-image-container">
+                <img id="flag-gif" src="https://i.giphy.com/6RL0oPQQuWlrCFcnkL.webp" alt="एनिमेटेड भारतीय ध्वज">
+            </div>
+            <p id="greeting-message">
+                <span id="greeting-name"></span> की ओर से: <span id="greeting-custom-message"></span>
+            </p>
         </div>
 
-        <div class="input-section">
+        <div class="user-interaction-wrapper">
             <div class="input-group">
-                <label for="nameInput">Enter your name</label>
-                <input type="text" id="nameInput" placeholder="Your name">
+                <input type="text" id="name-input" class="input-field" placeholder="अपना नाम दर्ज करें">
+                <input type="text" id="message-input" class="input-field" placeholder="अपना संदेश लिखें">
             </div>
-            <div class="input-group">
-                <label for="messageInput">Type your message</label>
-                <textarea id="messageInput" placeholder="Your Independence Day message"></textarea>
+            <div class="button-group">
+                <a id="whatsapp-share-button" href="#" class="share-button" target="_blank">
+                    <svg class="whatsapp-logo" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.37 21.82 12.04 21.82C17.5 21.82 21.95 17.37 21.95 11.91C21.95 6.45 17.5 2 12.04 2ZM17.15 15.28C16.91 15.82 15.96 16.29 15.42 16.35C14.94 16.42 14.31 16.45 13.92 16.29C13.54 16.12 12.78 15.86 11.84 14.99C10.68 13.91 9.94 12.59 9.77 12.31C9.6 12.03 8.89 11.02 8.89 10.03C8.89 9.04 9.49 8.5 9.72 8.26C9.95 8.02 10.25 7.96 10.53 7.96C10.74 7.96 10.93 7.97 11.1 8.01C11.31 8.06 11.49 8.44 11.66 8.76C11.83 9.09 12.13 9.92 12.19 10.03C12.26 10.14 12.23 10.3 12.11 10.42C11.99 10.54 11.83 10.7 11.68 10.87C11.54 11.03 11.39 11.16 11.26 11.3C11.13 11.44 11.01 11.55 11.19 11.82C11.37 12.09 11.89 12.84 12.61 13.48C13.51 14.31 14.18 14.61 14.48 14.75C14.78 14.89 15.02 14.86 15.2 14.68C15.39 14.5 15.79 13.97 16.01 13.68C16.24 13.38 16.47 13.32 16.76 13.43C17.05 13.54 18.01 14.01 18.26 14.26C18.51 14.51 18.62 14.65 18.68 14.81C18.74 14.97 18.74 15.28 17.15 15.28Z"/></svg>
+                    व्हाट्सएप पर साझा करें
+                </a>
             </div>
-
-            <button class="share-btn" id="shareBtn">
-                <span>Share via WhatsApp</span>
-            </button>
         </div>
-    </div>
+    </main>
 
     <script>
-        /* URL Params & State */
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                name: params.get('name') || '',
-                msg: params.get('msg') || ''
-            };
+        const landingScreen = document.getElementById('landing-screen');
+        const revealButton = document.getElementById('reveal-button');
+        const celebrationPage = document.getElementById('celebration-page');
+        const bgMusic = document.getElementById('bg-music');
+        const greetingName = document.getElementById('greeting-name');
+        const greetingCustomMessage = document.getElementById('greeting-custom-message');
+        const nameInput = document.getElementById('name-input');
+        const messageInput = document.getElementById('message-input');
+        const whatsappShareButton = document.getElementById('whatsapp-share-button');
+        const particleContainer = document.getElementById('particle-container');
+
+        let currentName = 'कोई';
+        let currentMessage = 'आपको स्वतंत्रता दिवस की बहुत-बहुत बधाई!';
+
+        function initializeFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nameFromURL = urlParams.get('name');
+            const msgFromURL = urlParams.get('msg');
+
+            if (nameFromURL) {
+                currentName = decodeURIComponent(nameFromURL);
+            }
+            if (msgFromURL) {
+                currentMessage = decodeURIComponent(msgFromURL);
+            }
+
+            updateGreeting();
+            updateInputs();
         }
 
         function updateGreeting() {
-            const params = getUrlParams();
-            const nameInput = document.getElementById('nameInput');
-            const messageInput = document.getElementById('messageInput');
-            const displayName = document.getElementById('displayName');
-            const displayMessage = document.getElementById('displayMessage');
-
-            if (params.name) {
-                displayName.textContent = params.name;
-            }
-
-            if (params.msg) {
-                displayMessage.textContent = params.msg;
-            }
+            greetingName.textContent = currentName;
+            greetingCustomMessage.textContent = currentMessage;
+            updateWhatsAppLink();
         }
 
-        /* Audio & Music-Reactive */
-        let audioContext;
-        let analyser;
-        let dataArray;
-        let audioSource;
-        let audioElement;
-        let isPlaying = false;
-
-        function setupAudio() {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            analyser.fftSize = 256;
-
-            // Note: You need an 'anthem.mp3' file in the same directory for the music to work.
-            audioElement = new Audio('https://github.com/manish-iitm/Projects/raw/refs/heads/main/anthem.mp3'); // Using a remote file for demo
-            audioElement.crossOrigin = "anonymous"; // Required for remote audio source
-            audioElement.loop = true;
-
-            audioSource = audioContext.createMediaElementSource(audioElement);
-            audioSource.connect(analyser);
-            analyser.connect(audioContext.destination);
-
-            const bufferLength = analyser.frequencyBinCount;
-            dataArray = new Uint8Array(bufferLength);
+        function updateInputs() {
+            nameInput.value = (currentName === 'कोई' || currentName === 'Someone') ? '' : currentName;
+            messageInput.value = (currentMessage === 'आपको स्वतंत्रता दिवस की बहुत-बहुत बधाई!' || currentMessage === 'wishes you a very Happy Independence Day!') ? '' : currentMessage;
         }
 
-        function startAudio() {
-            if (isPlaying) return;
-
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
-
-            audioElement.play()
-                .then(() => {
-                    isPlaying = true;
-                    startVisualization();
-                    startCelebrationEffects();
-                })
-                .catch(error => {
-                    console.error('Audio playback failed:', error);
-                });
+        function updateWhatsAppLink() {
+            const baseURL = window.location.origin + window.location.pathname;
+            const shareURL = `${baseURL}?name=${encodeURIComponent(currentName)}&msg=${encodeURIComponent(currentMessage)}`;
+            const whatsappMessage = `*${currentName} की ओर से आपके लिए एक विशेष संदेश!* 🇮🇳\n\n_${currentMessage}_\n\nपूरा उत्सव यहाँ देखें:\n${shareURL}`;
+            whatsappShareButton.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappMessage)}`;
         }
 
-        /* Celebrations: Confetti, Balloons, Emojis */
-        function createConfetti(x, y, color) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = `${x}px`;
-            confetti.style.top = `${y}px`;
-            confetti.style.backgroundColor = color;
+        revealButton.addEventListener('click', () => {
+            landingScreen.style.opacity = '0';
+            setTimeout(() => {
+                landingScreen.classList.add('hidden');
+            }, 1500);
 
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = 2 + Math.random() * 3;
-            const rotation = Math.random() * 360;
-            const rotationSpeed = (Math.random() - 0.5) * 10;
+            celebrationPage.style.visibility = 'visible';
+            celebrationPage.style.opacity = '1';
 
-            let currentX = x;
-            let currentY = y;
-            let opacity = 1;
+            bgMusic.play().catch(e => console.error("ऑडियो प्लेबैक विफल रहा:", e));
+            startCelebrationEffects();
+        });
 
-            function animate() {
-                currentX += Math.cos(angle) * velocity;
-                currentY += Math.sin(angle) * velocity + 1; // gravity
-                rotation += rotationSpeed;
-                opacity -= 0.01;
+        nameInput.addEventListener('input', (e) => {
+            currentName = e.target.value.trim() || 'कोई';
+            updateGreeting();
+        });
 
-                confetti.style.transform = `translate(${currentX - x}px, ${currentY - y}px) rotate(${rotation}deg)`;
-                confetti.style.opacity = opacity;
+        messageInput.addEventListener('input', (e) => {
+            currentMessage = e.target.value.trim() || 'आपको स्वतंत्रता दिवस की बहुत-बहुत बधाई!';
+            updateGreeting();
+        });
 
-                if (opacity > 0) {
-                    requestAnimationFrame(animate);
-                } else {
-                    confetti.remove();
-                }
-            }
+        const triColorEmojis = ['🧡', '🤍', '💚', '✨', '🇮🇳', '🎉'];
+        const neonColors = ['#FF9933', '#FFFFFF', '#138808', '#000080'];
 
-            document.body.appendChild(confetti);
-            requestAnimationFrame(animate);
-        }
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
 
-        function createEmoji() {
-            const emojis = ['🇮🇳', '🧡', '🤍', '💚', '✨', '🎉', '🕊️', '🙏'];
-            const emoji = document.createElement('div');
-            emoji.className = 'emoji-rain';
-            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            const size = Math.random() * 7 + 3;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `-20px`;
+            particle.style.backgroundColor = neonColors[Math.floor(Math.random() * neonColors.length)];
 
-            const startX = Math.random() * window.innerWidth;
-            const swayAmount = 50 + Math.random() * 100;
-            const swaySpeed = 0.5 + Math.random() * 1;
-            const fallSpeed = 1 + Math.random() * 3;
-            const rotationSpeed = (Math.random() - 0.5) * 4;
+            const animationDuration = Math.random() * 3 + 4;
+            particle.style.animation = `fall ${animationDuration}s linear forwards`;
 
-            let posY = -50;
-            let posX = startX;
-            let rotation = 0;
-            let swayPhase = Math.random() * Math.PI * 2;
-
-            function animate() {
-                posY += fallSpeed;
-                swayPhase += swaySpeed * 0.01;
-                posX = startX + Math.sin(swayPhase) * swayAmount;
-                rotation += rotationSpeed;
-
-                emoji.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
-
-                if (posY < window.innerHeight + 50) { // Check beyond screen bottom
-                    requestAnimationFrame(animate);
-                } else {
-                    emoji.remove();
-                }
-            }
-
-            document.body.appendChild(emoji);
-            requestAnimationFrame(animate);
-        }
-
-        function createBalloon() {
-            const balloon = document.createElement('div');
-            balloon.className = 'balloon';
-
-            const colors = ['#ff9933', '#ffffff', '#138808', '#0066b4'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const size = 30 + Math.random() * 50;
-
-            balloon.style.width = `${size}px`;
-            balloon.style.height = `${size}px`;
-            balloon.style.backgroundColor = color;
-            balloon.style.left = `${Math.random() * 100}vw`;
-            balloon.style.boxShadow = `0 0 ${size/2}px ${color}, 0 0 ${size/3}px ${color}80`;
-            const duration = 15 + Math.random() * 15;
-            balloon.style.animationDuration = `${duration}s`;
-            balloon.style.animationDelay = `${Math.random() * 5}s`;
-
-            document.body.appendChild(balloon);
+            particleContainer.appendChild(particle);
 
             setTimeout(() => {
-                balloon.remove();
-            }, (duration + 5) * 1000);
+                particle.remove();
+            }, animationDuration * 1000);
+        }
+
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            flower.textContent = triColorEmojis[Math.floor(Math.random() * triColorEmojis.length)];
+
+            flower.style.left = `${Math.random() * 100}%`;
+            flower.style.top = `-30px`;
+            flower.style.fontSize = `${Math.random() * 1 + 1}rem`;
+
+            const animationDuration = Math.random() * 5 + 8;
+            const sway = `translateX(${Math.random() * 100 - 50}px)`;
+
+            flower.animate([
+                { transform: `translateY(-30px) rotate(0deg) ${sway}`, opacity: 1 },
+                { transform: `translateY(100vh) rotate(720deg) ${sway}`, opacity: 0 }
+            ], {
+                duration: animationDuration * 1000,
+                easing: 'linear'
+            });
+
+            particleContainer.appendChild(flower);
+
+            setTimeout(() => {
+                flower.remove();
+            }, animationDuration * 1000);
         }
 
         function startCelebrationEffects() {
-            setInterval(createEmoji, 300);
-            setInterval(createBalloon, 800);
-
-            setInterval(() => {
-                if (!isPlaying || !dataArray) return;
-                analyser.getByteFrequencyData(dataArray);
-                const energy = dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length;
-
-                if (energy > 50) {
-                    const count = Math.floor(energy / 25);
-                    for (let i = 0; i < count; i++) {
-                        const x = Math.random() * window.innerWidth;
-                        const y = Math.random() * window.innerHeight;
-                        const colors = ['#ff9933', '#ffffff', '#138808'];
-                        const color = colors[Math.floor(Math.random() * colors.length)];
-                        createConfetti(x, y, color);
-                    }
-                }
-            }, 100);
+            setInterval(createParticle, 100);
+            setInterval(createFlower, 400);
         }
 
-        /* Visualization */
-        function startVisualization() {
-            const canvas = document.getElementById('visualizer');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            function draw() {
-                if (!isPlaying) return;
-                requestAnimationFrame(draw);
-                analyser.getByteFrequencyData(dataArray);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const barWidth = (canvas.width / dataArray.length) * 2.5;
-                let x = 0;
-
-                for (let i = 0; i < dataArray.length; i++) {
-                    const barHeight = dataArray[i] / 2;
-                    const gradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
-                    if (i < dataArray.length / 3) {
-                        gradient.addColorStop(0, '#ff9933');
-                        gradient.addColorStop(1, '#ff993355');
-                    } else if (i < (dataArray.length / 3) * 2) {
-                        gradient.addColorStop(0, '#ffffff');
-                        gradient.addColorStop(1, '#ffffff55');
-                    } else {
-                        gradient.addColorStop(0, '#138808');
-                        gradient.addColorStop(1, '#13880855');
-                    }
-                    ctx.fillStyle = gradient;
-                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                    x += barWidth + 1;
-                }
-            }
-            draw();
-        }
-
-        /* Inputs & Share */
-        function setupInputs() {
-            const nameInput = document.getElementById('nameInput');
-            const messageInput = document.getElementById('messageInput');
-            const displayName = document.getElementById('displayName');
-            const displayMessage = document.getElementById('displayMessage');
-            const shareBtn = document.getElementById('shareBtn');
-
-            nameInput.addEventListener('input', () => {
-                displayName.textContent = nameInput.value || 'Someone';
-            });
-
-            messageInput.addEventListener('input', () => {
-                displayMessage.textContent = messageInput.value || 'aapko Swatantrata Diwas ki hardik shubhkamnayein';
-            });
-
-            shareBtn.addEventListener('click', () => {
-                const name = nameInput.value || 'Someone';
-                const msg = messageInput.value || 'aapko Swatantrata Diwas ki hardik shubhkamnayein';
-                const shareUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}&msg=${encodeURIComponent(msg)}`;
-                const fullText = `*${name}* ki taraf se: ${msg}\n\nCheck out this Independence Day Greeting! 🇮🇳\n${shareUrl}`;
-
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'Independence Day Greetings',
-                        text: fullText,
-                        url: shareUrl
-                    }).catch(console.error);
-                } else {
-                    window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, '_blank');
-                }
-            });
-        }
-
-        /* Initialize */
-        function init() {
-            updateGreeting();
-            setupInputs();
-
-            document.getElementById('revealBtn').addEventListener('click', () => {
-                document.getElementById('landingScreen').style.opacity = '0';
-                document.getElementById('celebrationScreen').style.opacity = '1';
-
-                setupAudio();
-                startAudio();
-
-                setTimeout(() => {
-                    document.getElementById('landingScreen').style.display = 'none';
-                }, 500);
-            });
-
-            window.addEventListener('resize', () => {
-                const canvas = document.getElementById('visualizer');
-                if (canvas) {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', initializeFromURL);
     </script>
 </body>
 </html>
