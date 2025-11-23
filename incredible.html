@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Increasable App — Gemini Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f4f5f7;
+      --card:#ffffff;
+      --muted:#7a7f87;
+      --text:#111317;
+      --primary:#0a66ff;
+      --danger:#e53935;
+      --shadow: 0 6px 24px rgba(0,0,0,.06);
+      --radius:18px;
+      --soft: 14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg);
+      font-family: ui-sans-serif,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      display:flex; justify-content:center;
+      min-height:100svh;
+    }
+    .shell{
+      width: min(880px, 96vw);
+      display:flex; flex-direction:column;
+      gap:14px; padding:14px;
+    }
+
+    /* Top header card like screenshot */
+    .topcard{
+      background:var(--card); border-radius:var(--radius);
+      padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow: var(--shadow);
+    }
+    .leftrow{display:flex; align-items:center; gap:12px}
+    .botBadge{
+      width:42px;height:42px; border-radius:12px;
+      display:grid;place-items:center;
+      background:linear-gradient(180deg,#f7f7f8,#ededf0);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 1px 2px rgba(0,0,0,.05);
+      font-size:22px;
+    }
+    .appname{font-weight:700; font-size:22px; letter-spacing:.2px}
+    .sub{font-size:13px; color:var(--muted); display:flex; align-items:center; gap:8px}
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:#2ecc71; box-shadow:0 0 0 3px rgba(46,204,113,.18);
+      display:inline-block;
+    }
+    .pill{
+      border:0; background:#f1f3f9; color:#111;
+      padding:10px 16px; border-radius:999px; cursor:pointer;
+      font-weight:600; letter-spacing:.1px;
+    }
+    .pill:hover{filter:brightness(.97)}
+    .pill.primary{background:var(--primary); color:#fff}
+    .pill.danger{background:var(--danger); color:#fff}
+
+    /* Chat area card */
+    .chatcard{
+      background:var(--card); border-radius:var(--radius);
+      height:70svh; padding:8px 10px; overflow:auto; box-shadow:var(--shadow);
+    }
+    .msg{
+      max-width:80ch; line-height:1.4; white-space:pre-wrap;
+      background:#f3f4f6; padding:10px 12px; border-radius:14px;
+      margin:10px; box-shadow:0 1px 0 rgba(0,0,0,.03);
+    }
+    .msg.user{
+      margin-left:auto; background:#d9ebff;
+    }
+    .msg.bot{
+      margin-right:auto; background:#eeeeee;
+    }
+    .empty{
+      color:var(--muted); text-align:center; margin-top:16px; font-size:14px;
+    }
+
+    /* Bottom composer like screenshot */
+    .composerWrap{
+      position:sticky; bottom:10px; display:flex; justify-content:center;
+    }
+    .composer{
+      width:100%; background:var(--card); border-radius:18px;
+      padding:8px; display:flex; align-items:center; gap:8px;
+      box-shadow:var(--shadow);
+    }
+    .composer input{
+      flex:1; border:0; outline:none; font:inherit;
+      background:transparent; padding:12px 14px; border-radius:12px;
+    }
+    .send{
+      width:46px;height:42px; border-radius:14px; border:0; cursor:pointer;
+      background:var(--primary); color:#fff; font-size:18px;
+      display:grid; place-items:center;
+    }
+    .send:disabled{opacity:.5; cursor:not-allowed}
+
+    /* Modal for Add API */
+    .modalBack{
+      position:fixed; inset:0; background:rgba(0,0,0,.28);
+      display:none; place-items:center; padding:16px;
+    }
+    .modal{
+      width:min(520px, 96vw); background:var(--card); border-radius:16px; padding:16px;
+      box-shadow:var(--shadow);
+    }
+    .modal h3{margin:0 0 4px}
+    .row{display:flex; gap:8px; margin:10px 0; flex-wrap:wrap}
+    .row input{
+      flex:1; border:1px solid #e1e3ea; border-radius:12px; padding:12px 14px;
+    }
+    .muted{color:var(--muted); font-size:13px}
+    .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:6px}
+    .hidden{display:none}
+
+    /* Diagnostics (collapsed but available) */
+    details{font-size:13px; color:#333}
+    summary{cursor:pointer; user-select:none}
+    code{background:#f0f1f2; padding:2px 6px; border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Header like your screenshot -->
+    <div class="topcard">
+      <div class="leftrow">
+        <div class="botBadge">🤖</div>
+        <div>
+          <div class="appname">Increasable App</div>
+          <div class="sub"><span class="dot"></span><span id="onlineTxt">Online</span></div>
+        </div>
+      </div>
+      <button class="pill" id="openApi">Add API</button>
+    </div>
+
+    <!-- Chat stream -->
+    <div class="chatcard" id="chat">
+      <div class="empty" id="emptyHint">Say hi! Paste your Gemini API key and start chatting.</div>
+    </div>
+
+    <!-- Composer like screenshot -->
+    <div class="composerWrap">
+      <div class="composer">
+        <input id="msgInput" placeholder="Send a message..." />
+        <button id="sendBtn" class="send" title="Send">➤</button>
+      </div>
+    </div>
+
+    <!-- Diagnostics (collapsible) -->
+    <details>
+      <summary>Diagnostics</summary>
+      <div class="muted" id="statusline"></div>
+    </details>
+  </div>
+
+  <!-- Add/Update API Modal -->
+  <div id="modalBack" class="modalBack">
+    <div class="modal">
+      <h3>Add / Update Gemini API</h3>
+      <div class="muted">Your key is kept in this browser only (localStorage). Replace it anytime.</div>
+      <div class="row">
+        <input id="apiKeyInput" placeholder="Paste key starting with AI..." />
+      </div>
+      <div class="muted" id="keyMask">No key saved</div>
+      <div class="actions">
+        <button class="pill" id="closeModal">Cancel</button>
+        <button class="pill danger" id="removeKeyBtn">Remove</button>
+        <button class="pill primary" id="saveKeyBtn">Save Key</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ---------- Config ----------
+  const STORAGE_KEY = "gemini_user_key";
+  const MODEL = "gemini-2.5-flash";
+  const DIRECT = `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent`;
+
+  // Fallback proxies for POST (order matters)
+  const PROXIES = [
+    "https://cors.isomorphic-git.org/",
+    "https://thingproxy.freeboard.io/fetch/",
+  ];
+
+  // ---------- Elements ----------
+  const chatEl = document.getElementById("chat");
+  const emptyHint = document.getElementById("emptyHint");
+  const msgInput = document.getElementById("msgInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const statusline = document.getElementById("statusline");
+
+  // Modal
+  const modalBack = document.getElementById("modalBack");
+  const openApiBtn = document.getElementById("openApi");
+  const closeModalBtn = document.getElementById("closeModal");
+  const saveKeyBtn = document.getElementById("saveKeyBtn");
+  const removeKeyBtn = document.getElementById("removeKeyBtn");
+  const apiKeyInput = document.getElementById("apiKeyInput");
+  const keyMask = document.getElementById("keyMask");
+
+  // ---------- Helpers ----------
+  const mask = s => s ? s.replace(/.(?=.{4})/g, "•") : "";
+  const getKey = () => localStorage.getItem(STORAGE_KEY);
+  const setKey = k => { localStorage.setItem(STORAGE_KEY, k.trim()); renderKeyUI(); };
+  const clearKey = () => { localStorage.removeItem(STORAGE_KEY); renderKeyUI(); };
+
+  function addMsg(text, who){
+    const d = document.createElement("div");
+    d.className = "msg " + (who === "user" ? "user" : "bot");
+    d.textContent = text;
+    chatEl.appendChild(d);
+    chatEl.scrollTop = chatEl.scrollHeight;
+    if (emptyHint) emptyHint.classList.add("hidden");
+    return d;
+  }
+  function setStatus(t){ statusline.textContent = t; }
+
+  // Show modal
+  function openModal(){
+    apiKeyInput.value = getKey() || "";
+    modalBack.style.display = "grid";
+    apiKeyInput.focus();
+  }
+  function closeModal(){ modalBack.style.display = "none"; }
+
+  function renderKeyUI(){
+    const k = getKey();
+    keyMask.textContent = k ? `Saved: ${mask(k)}` : "No key saved";
+  }
+
+  // Environment diagnostics
+  function preflightChecks() {
+    const isFile = location.protocol === "file:";
+    const isHttp = location.protocol === "http:";
+    const isLocalhost = ["localhost","127.0.0.1"].includes(location.hostname);
+    const online = navigator.onLine;
+
+    const warns = [];
+    if (!online) warns.push("Offline.");
+    if (isFile) warns.push('Opened via file:// — start a local server for best results.');
+    if (isHttp && !isLocalhost) warns.push("Prefer HTTPS or localhost to avoid mixed-content.");
+    setStatus(warns.length ? "Warnings: " + warns.join(" ") : "Environment OK");
+  }
+
+  // Core request with fallback chain
+  async function requestGemini(prompt){
+    const apiKey = getKey();
+    if (!apiKey) return { error:{ message:"Missing API key" } };
+
+    const body = JSON.stringify({
+      contents:[{ role:"user", parts:[{ text: prompt }] }]
+    });
+
+    const attempts = [
+      { label:"direct", url:`${DIRECT}?key=${encodeURIComponent(apiKey)}` },
+      ...PROXIES.map(p => ({ label:`proxy:${p}`, url: p + `${DIRECT}?key=${encodeURIComponent(apiKey)}` }))
+    ];
+
+    let lastErr = null;
+
+    for (const a of attempts){
+      try{
+        setStatus(`Trying ${a.label}…`);
+        const res = await fetch(a.url, { method:"POST", headers:{ "Content-Type":"application/json" }, body });
+        let data;
+        try { data = await res.json(); }
+        catch { lastErr = { message:`Invalid JSON (${a.label})` }; continue; }
+
+        if (!res.ok || data.error){
+          const msg = data?.error?.message || `HTTP ${res.status}`;
+          lastErr = { message:`${a.label} -> ${msg}` };
+          continue;
+        }
+
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!text){ lastErr = { message:`${a.label} -> Empty response` }; continue; }
+        setStatus(`Success via ${a.label}`);
+        return { text };
+      }catch(e){
+        lastErr = { message:`${a.label} -> ${e.message || e}` };
+      }
+    }
+    return { error:lastErr || { message:"Unknown network error" } };
+  }
+
+  // Send handler
+  async function sendMessage(){
+    const v = msgInput.value.trim();
+    if (!v) return;
+    msgInput.value = "";
+    addMsg(v, "user");
+    const thinking = addMsg("Thinking…", "bot");
+
+    try{
+      const out = await requestGemini(v);
+      thinking.remove();
+      if (out.error) addMsg("Network/API error: " + out.error.message, "bot");
+      else addMsg(out.text, "bot");
+    }catch(e){
+      thinking.remove();
+      addMsg("Unexpected error: " + e, "bot");
+    }
+  }
+
+  // ---------- Wire up ----------
+  sendBtn.onclick = sendMessage;
+  msgInput.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
+
+  openApiBtn.onclick = openModal;
+  closeModalBtn.onclick = closeModal;
+  saveKeyBtn.onclick = () => {
+    const k = apiKeyInput.value.trim();
+    if (!k) return alert("Enter a valid API key");
+    setKey(k);
+    closeModal();
+    setStatus("API key saved.");
+  };
+  removeKeyBtn.onclick = () => {
+    clearKey();
+    apiKeyInput.value = "";
+    setStatus("API key removed.");
+  };
+
+  renderKeyUI();
+  preflightChecks();
+</script>
+</body>
+</html>
