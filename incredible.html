@@ -29,8 +29,6 @@
       display:flex; flex-direction:column;
       gap:14px; padding:14px;
     }
-
-    /* Top header card like screenshot */
     .topcard{
       background:var(--card); border-radius:var(--radius);
       padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
@@ -56,11 +54,9 @@
       padding:10px 16px; border-radius:999px; cursor:pointer;
       font-weight:600; letter-spacing:.1px;
     }
-    .pill:hover{filter:brightness(.97)}
     .pill.primary{background:var(--primary); color:#fff}
     .pill.danger{background:var(--danger); color:#fff}
 
-    /* Chat area card */
     .chatcard{
       background:var(--card); border-radius:var(--radius);
       height:70svh; padding:8px 10px; overflow:auto; box-shadow:var(--shadow);
@@ -70,17 +66,10 @@
       background:#f3f4f6; padding:10px 12px; border-radius:14px;
       margin:10px; box-shadow:0 1px 0 rgba(0,0,0,.03);
     }
-    .msg.user{
-      margin-left:auto; background:#d9ebff;
-    }
-    .msg.bot{
-      margin-right:auto; background:#eeeeee;
-    }
-    .empty{
-      color:var(--muted); text-align:center; margin-top:16px; font-size:14px;
-    }
+    .msg.user{ margin-left:auto; background:#d9ebff; }
+    .msg.bot{ margin-right:auto; background:#eeeeee; }
+    .empty{ color:var(--muted); text-align:center; margin-top:16px; font-size:14px; }
 
-    /* Bottom composer like screenshot */
     .composerWrap{
       position:sticky; bottom:10px; display:flex; justify-content:center;
     }
@@ -98,9 +87,7 @@
       background:var(--primary); color:#fff; font-size:18px;
       display:grid; place-items:center;
     }
-    .send:disabled{opacity:.5; cursor:not-allowed}
 
-    /* Modal for Add API */
     .modalBack{
       position:fixed; inset:0; background:rgba(0,0,0,.28);
       display:none; place-items:center; padding:16px;
@@ -109,64 +96,68 @@
       width:min(520px, 96vw); background:var(--card); border-radius:16px; padding:16px;
       box-shadow:var(--shadow);
     }
-    .modal h3{margin:0 0 4px}
-    .row{display:flex; gap:8px; margin:10px 0; flex-wrap:wrap}
-    .row input{
-      flex:1; border:1px solid #e1e3ea; border-radius:12px; padding:12px 14px;
+    .modal .row{display:flex; gap:8px; margin:10px 0; flex-direction:column;}
+    .modal input{
+      border:1px solid #e1e3ea; border-radius:12px; padding:12px 14px;
+      font:inherit; width:100%;
     }
-    .muted{color:var(--muted); font-size:13px}
-    .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:6px}
-    .hidden{display:none}
+    .apiButtons{
+      display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;
+    }
+    .apiButtons a{
+      text-decoration:none; padding:10px 14px; border-radius:12px;
+      background:#e9ecf3; color:#111; font-weight:600;
+    }
+    .apiButtons a:hover{ background:#dfe3ec; }
 
-    /* Diagnostics (collapsed but available) */
-    details{font-size:13px; color:#333}
-    summary{cursor:pointer; user-select:none}
-    code{background:#f0f1f2; padding:2px 6px; border-radius:6px}
+    .muted{color:var(--muted); font-size:13px}
+    .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:10px}
+    .hidden{display:none}
   </style>
 </head>
+
 <body>
   <div class="shell">
-    <!-- Header like your screenshot -->
     <div class="topcard">
       <div class="leftrow">
         <div class="botBadge">🤖</div>
         <div>
           <div class="appname">Increasable App</div>
-          <div class="sub"><span class="dot"></span><span id="onlineTxt">Online</span></div>
+          <div class="sub"><span class="dot"></span>Online</div>
         </div>
       </div>
       <button class="pill" id="openApi">Add API</button>
     </div>
 
-    <!-- Chat stream -->
-    <div class="chatcard" id="chat">
-      <div class="empty" id="emptyHint">Say hi! Paste your Gemini API key and start chatting.</div>
-    </div>
+    <div class="chatcard" id="chat"><div class="empty" id="emptyHint">Say hi! Paste your Gemini API key and start chatting.</div></div>
 
-    <!-- Composer like screenshot -->
     <div class="composerWrap">
       <div class="composer">
         <input id="msgInput" placeholder="Send a message..." />
-        <button id="sendBtn" class="send" title="Send">➤</button>
+        <button id="sendBtn" class="send">➤</button>
       </div>
     </div>
-
-    <!-- Diagnostics (collapsible) -->
-    <details>
-      <summary>Diagnostics</summary>
-      <div class="muted" id="statusline"></div>
-    </details>
   </div>
 
-  <!-- Add/Update API Modal -->
+  <!-- API MODAL -->
   <div id="modalBack" class="modalBack">
     <div class="modal">
       <h3>Add / Update Gemini API</h3>
-      <div class="muted">Your key is kept in this browser only (localStorage). Replace it anytime.</div>
+      <div class="muted">Your key stays in this browser only.</div>
+
       <div class="row">
-        <input id="apiKeyInput" placeholder="Paste key starting with AI..." />
+        <input id="apiKeyInput" placeholder="Paste your API key (AI...)" />
+
+        <!-- ⭐ Added Buttons Here ⭐ -->
+        <div class="apiButtons">
+          <a href="https://aistudio.google.com/api-keys" target="_blank">Get API Key</a>
+          <a href="https://youtube.com/shorts/T1BTyo1A4Ww?si=utzWNARFG0R8X0-e" target="_blank">Watch Video</a>
+        </div>
+        <!-- ⭐ End Added Buttons ⭐ -->
       </div>
+
       <div class="muted" id="keyMask">No key saved</div>
+
       <div class="actions">
         <button class="pill" id="closeModal">Cancel</button>
         <button class="pill danger" id="removeKeyBtn">Remove</button>
@@ -176,158 +167,102 @@
   </div>
 
 <script>
-  // ---------- Config ----------
   const STORAGE_KEY = "gemini_user_key";
   const MODEL = "gemini-2.5-flash";
   const DIRECT = `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent`;
+  const PROXIES = ["https://cors.isomorphic-git.org/","https://thingproxy.freeboard.io/fetch/"];
 
-  // Fallback proxies for POST (order matters)
-  const PROXIES = [
-    "https://cors.isomorphic-git.org/",
-    "https://thingproxy.freeboard.io/fetch/",
-  ];
+  const chatEl=document.getElementById("chat");
+  const msgInput=document.getElementById("msgInput");
+  const sendBtn=document.getElementById("sendBtn");
+  const emptyHint=document.getElementById("emptyHint");
 
-  // ---------- Elements ----------
-  const chatEl = document.getElementById("chat");
-  const emptyHint = document.getElementById("emptyHint");
-  const msgInput = document.getElementById("msgInput");
-  const sendBtn = document.getElementById("sendBtn");
-  const statusline = document.getElementById("statusline");
+  const modalBack=document.getElementById("modalBack");
+  const openApi=document.getElementById("openApi");
+  const closeModal=document.getElementById("closeModal");
+  const saveKeyBtn=document.getElementById("saveKeyBtn");
+  const removeKeyBtn=document.getElementById("removeKeyBtn");
+  const apiKeyInput=document.getElementById("apiKeyInput");
+  const keyMask=document.getElementById("keyMask");
 
-  // Modal
-  const modalBack = document.getElementById("modalBack");
-  const openApiBtn = document.getElementById("openApi");
-  const closeModalBtn = document.getElementById("closeModal");
-  const saveKeyBtn = document.getElementById("saveKeyBtn");
-  const removeKeyBtn = document.getElementById("removeKeyBtn");
-  const apiKeyInput = document.getElementById("apiKeyInput");
-  const keyMask = document.getElementById("keyMask");
+  const mask=s=>s?s.replace(/.(?=.{4})/g,"•"):"";
+  const getKey=()=>localStorage.getItem(STORAGE_KEY);
+  const setKey=k=>{localStorage.setItem(STORAGE_KEY,k.trim()); renderKey();};
+  const clearKey=()=>{localStorage.removeItem(STORAGE_KEY); renderKey();};
 
-  // ---------- Helpers ----------
-  const mask = s => s ? s.replace(/.(?=.{4})/g, "•") : "";
-  const getKey = () => localStorage.getItem(STORAGE_KEY);
-  const setKey = k => { localStorage.setItem(STORAGE_KEY, k.trim()); renderKeyUI(); };
-  const clearKey = () => { localStorage.removeItem(STORAGE_KEY); renderKeyUI(); };
+  function renderKey(){
+    const k=getKey();
+    keyMask.textContent=k?`Saved: ${mask(k)}`:"No key saved";
+  }
 
-  function addMsg(text, who){
-    const d = document.createElement("div");
-    d.className = "msg " + (who === "user" ? "user" : "bot");
-    d.textContent = text;
+  function addMsg(t,who){
+    const d=document.createElement("div");
+    d.className="msg "+(who==="user"?"user":"bot");
+    d.textContent=t;
     chatEl.appendChild(d);
-    chatEl.scrollTop = chatEl.scrollHeight;
-    if (emptyHint) emptyHint.classList.add("hidden");
+    chatEl.scrollTop=chatEl.scrollHeight;
+    emptyHint.classList.add("hidden");
     return d;
   }
-  function setStatus(t){ statusline.textContent = t; }
 
-  // Show modal
-  function openModal(){
-    apiKeyInput.value = getKey() || "";
-    modalBack.style.display = "grid";
-    apiKeyInput.focus();
-  }
-  function closeModal(){ modalBack.style.display = "none"; }
-
-  function renderKeyUI(){
-    const k = getKey();
-    keyMask.textContent = k ? `Saved: ${mask(k)}` : "No key saved";
-  }
-
-  // Environment diagnostics
-  function preflightChecks() {
-    const isFile = location.protocol === "file:";
-    const isHttp = location.protocol === "http:";
-    const isLocalhost = ["localhost","127.0.0.1"].includes(location.hostname);
-    const online = navigator.onLine;
-
-    const warns = [];
-    if (!online) warns.push("Offline.");
-    if (isFile) warns.push('Opened via file:// — start a local server for best results.');
-    if (isHttp && !isLocalhost) warns.push("Prefer HTTPS or localhost to avoid mixed-content.");
-    setStatus(warns.length ? "Warnings: " + warns.join(" ") : "Environment OK");
-  }
-
-  // Core request with fallback chain
   async function requestGemini(prompt){
-    const apiKey = getKey();
-    if (!apiKey) return { error:{ message:"Missing API key" } };
+    const apiKey=getKey();
+    if(!apiKey) return {error:{message:"Missing API key"}};
 
-    const body = JSON.stringify({
-      contents:[{ role:"user", parts:[{ text: prompt }] }]
+    const body=JSON.stringify({
+      contents:[{role:"user",parts:[{text:prompt}]}]
     });
 
-    const attempts = [
-      { label:"direct", url:`${DIRECT}?key=${encodeURIComponent(apiKey)}` },
-      ...PROXIES.map(p => ({ label:`proxy:${p}`, url: p + `${DIRECT}?key=${encodeURIComponent(apiKey)}` }))
+    const attempts=[
+      {label:"direct",url:`${DIRECT}?key=${encodeURIComponent(apiKey)}`},
+      ...PROXIES.map(p=>({label:`proxy:${p}`,url:p+`${DIRECT}?key=${encodeURIComponent(apiKey)}`}))
     ];
 
-    let lastErr = null;
-
-    for (const a of attempts){
+    for(const a of attempts){
       try{
-        setStatus(`Trying ${a.label}…`);
-        const res = await fetch(a.url, { method:"POST", headers:{ "Content-Type":"application/json" }, body });
-        let data;
-        try { data = await res.json(); }
-        catch { lastErr = { message:`Invalid JSON (${a.label})` }; continue; }
-
-        if (!res.ok || data.error){
-          const msg = data?.error?.message || `HTTP ${res.status}`;
-          lastErr = { message:`${a.label} -> ${msg}` };
-          continue;
-        }
-
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text){ lastErr = { message:`${a.label} -> Empty response` }; continue; }
-        setStatus(`Success via ${a.label}`);
-        return { text };
-      }catch(e){
-        lastErr = { message:`${a.label} -> ${e.message || e}` };
-      }
+        const res=await fetch(a.url,{method:"POST",headers:{"Content-Type":"application/json"},body});
+        let data=await res.json().catch(()=>null);
+        if(!data) continue;
+        if(data.error) continue;
+        const text=data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if(text) return {text};
+      }catch{}
     }
-    return { error:lastErr || { message:"Unknown network error" } };
+    return {error:{message:"Network error"}};
   }
 
-  // Send handler
   async function sendMessage(){
-    const v = msgInput.value.trim();
-    if (!v) return;
-    msgInput.value = "";
-    addMsg(v, "user");
-    const thinking = addMsg("Thinking…", "bot");
+    const v=msgInput.value.trim();
+    if(!v) return;
+    msgInput.value="";
+    addMsg(v,"user");
+    const think=addMsg("Thinking…","bot");
 
-    try{
-      const out = await requestGemini(v);
-      thinking.remove();
-      if (out.error) addMsg("Network/API error: " + out.error.message, "bot");
-      else addMsg(out.text, "bot");
-    }catch(e){
-      thinking.remove();
-      addMsg("Unexpected error: " + e, "bot");
-    }
+    const out=await requestGemini(v);
+    think.remove();
+    if(out.error) addMsg("Error: "+out.error.message,"bot");
+    else addMsg(out.text,"bot");
   }
 
-  // ---------- Wire up ----------
-  sendBtn.onclick = sendMessage;
-  msgInput.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
+  sendBtn.onclick=sendMessage;
+  msgInput.addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage();});
 
-  openApiBtn.onclick = openModal;
-  closeModalBtn.onclick = closeModal;
-  saveKeyBtn.onclick = () => {
-    const k = apiKeyInput.value.trim();
-    if (!k) return alert("Enter a valid API key");
+  openApi.onclick=()=>{ modalBack.style.display="grid"; apiKeyInput.value=getKey()||""; };
+  closeModal.onclick=()=>modalBack.style.display="none";
+
+  saveKeyBtn.onclick=()=>{
+    const k=apiKeyInput.value.trim();
+    if(!k) return alert("Enter valid key");
     setKey(k);
-    closeModal();
-    setStatus("API key saved.");
-  };
-  removeKeyBtn.onclick = () => {
-    clearKey();
-    apiKeyInput.value = "";
-    setStatus("API key removed.");
+    modalBack.style.display="none";
   };
 
-  renderKeyUI();
-  preflightChecks();
+  removeKeyBtn.onclick=()=>{
+    clearKey();
+    apiKeyInput.value="";
+  };
+
+  renderKey();
 </script>
 </body>
-</html>
+  </html>
