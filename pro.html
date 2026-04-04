@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Architect</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+.step-card:hover {
+    transform: translateY(-2px);
+    transition: 0.2s ease;
+}
+</style>
+
+</head>
+
+<body class="bg-slate-50 min-h-screen font-sans text-slate-900">
+
+<div class="max-w-5xl mx-auto px-4 py-10">
+
+    <!-- Header -->
+    <header class="text-center mb-8">
+        <h1 class="text-4xl font-extrabold mb-2">🚀 Prompt Architect</h1>
+        <p class="text-slate-600">
+            Create powerful, high-converting AI prompts in seconds using a proven 7-step framework.
+        </p>
+    </header>
+
+    <!-- Why Section -->
+    <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg text-sm text-indigo-800 mb-8 text-center">
+        This framework is used by professionals to generate precise, high-quality AI outputs using clarity, context, and constraints.
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        <!-- LEFT SIDE -->
+        <div class="space-y-4">
+
+            <!-- Example Button -->
+            <button onclick="fillExample()" class="w-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 py-2 rounded-lg text-sm font-medium">
+                ⚡ Try Example
+            </button>
+
+            <!-- STEP 1 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border step-card">
+                <h2 class="font-bold mb-2">1. Role</h2>
+                <p class="text-xs text-slate-500 mb-2">Who should the AI act as?</p>
+                <input id="role" class="w-full p-3 border rounded-lg" placeholder="e.g. Senior Marketing Strategist">
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border step-card">
+                <h2 class="font-bold mb-2">2. Task</h2>
+                <p class="text-xs text-slate-500 mb-2">What do you want the AI to do?</p>
+                <textarea id="task" class="w-full p-3 border rounded-lg" rows="2" placeholder="e.g. Create a 30-day content plan"></textarea>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border step-card">
+                <h2 class="font-bold mb-2">3. Context</h2>
+                <p class="text-xs text-slate-500 mb-2">Add background info (audience, product, goal)</p>
+                <textarea id="context" class="w-full p-3 border rounded-lg" rows="2" placeholder="e.g. Audience: freelancers"></textarea>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border step-card">
+                <h2 class="font-bold mb-2">4. Reasoning</h2>
+                <p class="text-xs text-slate-500 mb-2">Tell AI how to think</p>
+                <input id="reasoning" class="w-full p-3 border rounded-lg" placeholder="e.g. Break week-wise">
+            </div>
+
+            <!-- STEP 5 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border step-card">
+                <h2 class="font-bold mb-2">5. Rules</h2>
+                <p class="text-xs text-slate-500 mb-2">Constraints, tone, do’s & don’ts</p>
+                <textarea id="rules" class="w-full p-3 border rounded-lg" rows="2" placeholder="e.g. No generic advice"></textarea>
+            </div>
+
+            <!-- STEP 6 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border step-card">
+                <h2 class="font-bold mb-2">6. Stop Condition</h2>
+                <p class="text-xs text-slate-500 mb-2">When should AI stop?</p>
+                <input id="stop" class="w-full p-3 border rounded-lg" placeholder="e.g. After 30 days">
+            </div>
+
+            <!-- STEP 7 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border step-card">
+                <h2 class="font-bold mb-2">7. Output Format</h2>
+                <p class="text-xs text-slate-500 mb-2">How should output be structured?</p>
+                <input id="format" class="w-full p-3 border rounded-lg" placeholder="e.g. Table format">
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="sticky top-10 h-fit">
+
+            <div class="bg-slate-900 text-slate-100 p-8 rounded-2xl shadow-xl">
+
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-indigo-400">Final Prompt</h2>
+                    <button onclick="clearFields()" class="text-xs bg-slate-800 px-3 py-1 rounded">Clear</button>
+                </div>
+
+                <div id="output" class="min-h-[300px] whitespace-pre-wrap text-sm text-slate-300">
+Start filling the fields to generate your AI prompt...
+
+Tip:
+The more specific your inputs, the better your results.
+                </div>
+
+                <button id="copyBtn" onclick="copyPrompt()" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-500 py-3 rounded-xl font-bold">
+                    🚀 Copy Prompt & Use in AI
+                </button>
+
+            </div>
+
+            <p class="mt-4 text-sm text-center text-slate-500 italic">
+                Pro Tip: Great prompts = Clear role + Specific task + Strong constraints.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const ids = ["role","task","context","reasoning","rules","stop","format"];
+
+function generatePrompt(){
+    let values = {};
+    ids.forEach(id => values[id] = document.getElementById(id).value.trim());
+
+    let output = "";
+
+    if(values.role) output += "**Role:**\n" + values.role + "\n\n";
+    if(values.task) output += "**Task:**\n" + values.task + "\n\n";
+    if(values.context) output += "**Context:**\n" + values.context + "\n\n";
+    if(values.reasoning) output += "**Reasoning:**\n" + values.reasoning + "\n\n";
+    if(values.rules) output += "**Rules & Constraints:**\n" + values.rules + "\n\n";
+    if(values.stop) output += "**Stop Condition:**\n" + values.stop + "\n\n";
+    if(values.format) output += "**Output Format:**\n" + values.format;
+
+    document.getElementById("output").innerText =
+        output || `Start filling the fields to generate your AI prompt...\n\nTip:\nThe more specific your inputs, the better your results.`;
+}
+
+ids.forEach(id => {
+    document.getElementById(id).addEventListener("input", generatePrompt);
+});
+
+function copyPrompt(){
+    let text = document.getElementById("output").innerText;
+    if(text.includes("Start filling")) return;
+
+    navigator.clipboard.writeText(text);
+
+    let btn = document.getElementById("copyBtn");
+    btn.innerText = "✅ Copied!";
+    btn.classList.replace("bg-indigo-600","bg-green-600");
+
+    setTimeout(()=>{
+        btn.innerText = "🚀 Copy Prompt & Use in AI";
+        btn.classList.replace("bg-green-600","bg-indigo-600");
+    },2000);
+}
+
+function clearFields(){
+    ids.forEach(id => document.getElementById(id).value = "");
+    generatePrompt();
+}
+
+function fillExample(){
+    document.getElementById('role').value = "Senior Marketing Strategist";
+    document.getElementById('task').value = "Create a 30-day Instagram content plan";
+    document.getElementById('context').value = "Audience: freelancers, Product: AI tools";
+    document.getElementById('reasoning').value = "Break week-wise with goals";
+    document.getElementById('rules').value = "No generic advice, clear CTA";
+    document.getElementById('stop').value = "After 30 days";
+    document.getElementById('format').value = "Table: Day | Idea | Caption | CTA";
+
+    generatePrompt();
+}
+
+generatePrompt();
+
+</script>
+
+</body>
+</html>
