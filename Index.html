@@ -68,6 +68,17 @@
             font-weight: 600;
         }
 
+        .redirect-text {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 15px;
+        }
+
+        #timer {
+            color: #ffaa00;
+            font-weight: bold;
+        }
+
         .loader {
             display: inline-block;
             width: 50px;
@@ -99,10 +110,27 @@
         <h1>Worth the Wait.</h1>
         <p>I promised this website on <span class="highlight">July 1st</span>. It’s taking a little longer than planned, but only because I am making sure it delivers the <span class="highlight">absolute best value</span> for you.</p>
         <p>Quality takes time. Stay tuned.</p>
+        
         <div class="loader">
             <span class="loader-bar"></span>
         </div>
+
+        <p class="redirect-text">Redirecting you in <span id="timer">10</span> seconds...</p>
     </div>
+
+    <script>
+        // Simple countdown script to match the meta refresh
+        let timeLeft = 10;
+        const timerElement = document.getElementById('timer');
+        
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+            }
+        }, 1000);
+    </script>
 
 </body>
 </html>
