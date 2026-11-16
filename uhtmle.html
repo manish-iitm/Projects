@@ -1,798 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate HTML Editor</title>
-    
-    <!-- CodeMirror CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    
-    <style>
-        :root {
-            --sidebar-width: 250px;
-            --sidebar-bg: #f5f5f5;
-            --border-color: #ddd;
-            --button-bg: white;
-            --button-hover: #eee;
-            --editor-bg: #282a36;
-            --editor-text: #f8f8f2;
-            --header-bg: #04AA6D;
-            --header-text: white;
-            --preview-bg: white;
-            --toolbar-bg: #E7E9EB;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
-        
-        #app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        
-        #header {
-            background-color: var(--header-bg);
-            color: var(--header-text);
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        #header h1 {
-            font-size: 1.5rem;
-            margin: 0;
-        }
-        
-        .header-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .btn {
-            background-color: var(--header-bg);
-            color: var(--header-text);
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.2s;
-        }
-        
-        .btn:hover {
-            background-color: #059862;
-        }
-        
-        .btn i {
-            font-size: 0.9em;
-        }
-        
-        #mobile-menu-toggle {
-            display: none;
-            padding: 12px;
-            background: var(--sidebar-bg);
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        
-        #view {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-        
-        #sidebar {
-            width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--border-color);
-            transition: transform 0.3s ease;
-            overflow-y: auto;
-        }
-        
-        .sidebar-header {
-            font-size: 1.2rem;
-            margin: 10px 0 25px 0;
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        #editor-tools {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .tool-btn {
-            margin-bottom: 0;
-            padding: 10px 12px;
-            background: var(--button-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: background-color 0.2s;
-        }
-        
-        .tool-btn i {
-            width: 20px;
-            text-align: center;
-            font-size: 1.1em;
-        }
-        
-        .tool-btn:hover {
-            background: var(--button-hover);
-        }
-        
-        #main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        #split-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            min-height: 0;
-        }
-        
-        .panel {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            min-height: 0;
-        }
-        
-        .panel-header {
-            background-color: var(--toolbar-bg);
-            padding: 8px 15px;
-            font-size: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .panel-title {
-            font-weight: bold;
-        }
-        
-        .panel-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .panel-action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1em;
-            color: #666;
-            padding: 5px;
-            border-radius: 3px;
-            transition: all 0.2s;
-        }
-        
-        .panel-action-btn:hover {
-            color: #333;
-            background-color: rgba(0,0,0,0.1);
-        }
-        
-        .panel-content {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            min-height: 0;
-        }
-        
-        .CodeMirror {
-            height: 100% !important;
-            width: 100% !important;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        #preview-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: var(--preview-bg);
-        }
-        
-        .copyright {
-            margin-top: auto;
-            padding-top: 25px;
-            font-size: 13px;
-            color: #666;
-            text-align: center;
-            line-height: 1.5;
-        }
-        
-        /* Gutter styling for split view */
-        .gutter {
-            background-color: var(--toolbar-bg);
-            background-repeat: no-repeat;
-            background-position: 50%;
-        }
-        
-        .gutter.gutter-horizontal {
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-            cursor: col-resize;
-        }
-        
-        .gutter.gutter-vertical {
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
-            cursor: row-resize;
-        }
-        
-        /* Mobile styles */
-        @media (max-width: 768px) {
-            #mobile-menu-toggle {
-                display: block;
-                position: absolute;
-                top: 56px; /* Adjust based on header height */
-                left: 0;
-                z-index: 101;
-                border: 1px solid var(--border-color);
-                border-left: none;
-                border-top-right-radius: 4px;
-                border-bottom-right-radius: 4px;
-                background-color: var(--sidebar-bg);
-            }
-            
-            #sidebar {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                z-index: 100;
-                transform: translateX(-100%);
-                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            }
-            
-            #sidebar.open {
-                transform: translateX(0);
-            }
-            
-            #view {
-                position: relative;
-            }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML Online Viewer – Free HTML Editor with Live Preview</title>
+<meta name="description" content="Free online HTML editor, formatter and viewer with instant live preview. Everything runs in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --canvas:#000;--deep:#0B0D0B;--hero:#091C1E;--panel:#171717;--shell:#1D2021;
+  --border:#282828;--muted:#9CA49C;--soft:#878B86;--ink:#F6F6F6;
+  --action:#F6833B;--on-action:#1a0e05;--status:#00FF88;--warn:#F34E3F;--code:#FBF1C7;--hover:#232826;
+  --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --sans:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",Consolas,Menlo,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --canvas:#F6F6F6;--deep:#ECEEEC;--hero:#E3EEEC;--panel:#FFF;--shell:#FFF;
+  --border:#D3D8D3;--muted:#4A524A;--soft:#5F665F;--ink:#111;
+  --action:#F6833B;--on-action:#1a0e05;--status:#00875A;--warn:#D63A2C;--code:#6b5200;--hover:#E2E7E2;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--canvas);color:var(--ink);font:15px/1.37 var(--sans)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--status);outline-offset:2px}
+.hidden{display:none!important}
+#app{display:flex;height:100vh;height:100dvh}
 
-            #main-content {
-                padding-top: 45px; /* space for mobile menu toggle */
-            }
+/* sidebar */
+#sidebar{flex:0 0 232px;display:flex;flex-direction:column;background:var(--deep);border-right:1px solid var(--border);padding:18px 14px 12px;overflow-y:auto;z-index:20}
+.brand{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.brand a{font:400 1.75rem/1 var(--serif);letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.brand small{display:block;margin-top:6px;font:400 .75rem/1.33 var(--sans);color:var(--soft);letter-spacing:0}
+#closeMenu{display:none;background:none;border:0;font-size:20px;cursor:pointer;color:var(--muted)}
+.group{border-top:1px solid var(--border);padding:10px 0}
+.group:first-of-type{border-top:2px solid var(--warn)}
+.tool{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;margin:0 0 4px;padding:7px 9px;background:transparent;border:1px solid transparent;border-radius:4px;color:var(--ink);cursor:pointer;text-align:left;font-size:13.5px}
+.tool:hover{background:var(--hover);border-color:var(--border)}
+.tool kbd{font:400 .688rem var(--mono);color:var(--soft);border:1px solid var(--border);border-radius:3px;padding:0 5px;background:transparent}
+.tool.primary{background:var(--action);color:var(--on-action);font-weight:700;border-radius:.5rem;padding:9px 11px;margin-bottom:6px}
+.tool.primary:hover{background:var(--action);filter:brightness(1.08)}
+.tool.primary kbd{color:var(--on-action);border-color:rgba(0,0,0,.35)}
+.side-foot{margin-top:auto;padding-top:12px;font-size:.75rem;color:var(--soft);display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--status);flex:none}
+#backdrop{display:none}
 
-            #split-container {
-                flex-direction: column;
-            }
-        }
-        
-        /* Dark theme */
-        body.dark-theme {
-            --sidebar-bg: #2d2d2d;
-            --border-color: #444;
-            --button-bg: #333;
-            --button-hover: #444;
-            --header-bg: #38444d;
-            --toolbar-bg: #38444d;
-            --preview-bg: #1e1e1e;
-        }
+/* main */
+#main{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--canvas)}
+#tabs{display:none;gap:6px;padding:8px;background:var(--deep);border-bottom:1px solid var(--border)}
+#tabs button{flex:1;padding:6px 10px;background:transparent;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:13px}
+#tabs button.on{background:var(--action);border-color:var(--action);color:var(--on-action);font-weight:700}
+#tabs #menuBtn{flex:0 0 auto}
+.bar{display:flex;align-items:center;gap:10px;height:34px;padding:0 12px;background:var(--panel);border-bottom:1px solid var(--border);font:400 .75rem var(--mono);color:var(--muted)}
+.chip{padding:1px 8px;border:1px solid var(--border);border-radius:3px;color:var(--code)}
+.bar .sp{flex:1}
+.live{display:flex;align-items:center;gap:6px;color:var(--status)}
+#editorWrap{flex:0 0 50%;min-height:90px;display:flex;flex-direction:column;overflow:hidden}
+#editorBox{position:relative;flex:1;min-height:0}
+#editor{position:absolute;inset:0}
+.ace_editor{background:var(--shell)!important;color:var(--ink)}
+.ace_gutter{background:var(--deep)!important;color:var(--soft)!important}
+.ace_gutter-active-line,.ace_active-line{background:var(--hover)!important}
+.ace_cursor{color:var(--status)!important}
+:root[data-theme="dark"] .ace_text-layer{color:var(--code)}
+#separ{flex:0 0 7px;height:7px;cursor:row-resize;background:var(--deep);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;touch-action:none}
+#separ::after{content:"";position:absolute;left:50%;top:50%;width:40px;height:2px;margin:-1px 0 0 -20px;background:var(--soft);opacity:.5}
+#separ:hover,#separ.drag{background:var(--warn)}
+#previewWrap{flex:1;min-height:90px;display:flex;flex-direction:column;overflow:hidden}
+#liveFrame{flex:1;min-height:0;width:100%;border:0;background:#fff}
+#cover{position:fixed;inset:0;z-index:9000;display:none;cursor:row-resize}
+#cover.on{display:block}
 
-        body.dark-theme .CodeMirror {
-            background: var(--editor-bg);
-            color: var(--editor-text);
-        }
-        
-        body.dark-theme .tool-btn {
-            color: #eee;
-            border-color: #444;
-        }
-        
-        body.dark-theme .panel-header {
-             color: #eee;
-        }
+/* toast */
+#toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,14px);background:var(--panel);color:var(--ink);border:1px solid var(--border);border-left:3px solid var(--status);padding:9px 16px;border-radius:4px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:10000;max-width:90vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}
 
-        body.dark-theme .panel-action-btn {
-            color: #aaa;
-        }
-        
-        body.dark-theme .panel-action-btn:hover {
-            color: #ddd;
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        body.dark-theme .copyright {
-            color: #999;
-        }
-        
-        body.dark-theme #sidebar {
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-        }
-        
-        /* Fullscreen mode */
-        body.fullscreen {
-             overflow: hidden;
-        }
-        
-        #app-container.fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1000;
-            height: 100%;
-        }
+/* about dialog */
+dialog{background:var(--panel);color:var(--ink);border:1px solid var(--border);border-radius:6px;padding:0;width:min(620px,94vw);max-height:86vh}
+dialog::backdrop{background:rgba(0,0,0,.65)}
+.d-head{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--border)}
+.d-head h2{margin:0;font:400 2rem/1.125 var(--serif);letter-spacing:-.01em}
+.d-body{padding:4px 22px 18px;overflow-y:auto;max-height:calc(86vh - 70px)}
+.d-body h3{margin:22px 0 8px;padding-top:10px;border-top:2px solid var(--warn);font:400 1.5rem/1.2 var(--serif);letter-spacing:-.02em}
+.d-body p,.d-body li{color:var(--muted);line-height:1.5}
+.d-body ul{padding-left:18px}
+.d-body a{color:var(--action)}
+.d-body kbd{font:400 .75rem var(--mono);background:var(--shell);color:var(--code);border:1px solid var(--border);border-radius:3px;padding:0 5px}
+.d-close{background:transparent;border:1px solid var(--border);border-radius:4px;padding:5px 12px;cursor:pointer}
+.d-close:hover{background:var(--hover)}
 
-        #app-container.fullscreen #sidebar,
-        #app-container.fullscreen #header,
-        #app-container.fullscreen #mobile-menu-toggle {
-            display: none;
-        }
-    </style>
-</head>
+/* ace search box */
+.ace_search{background:var(--panel)!important;border:1px solid var(--border)!important;color:var(--ink)!important;border-radius:4px!important;font-family:var(--sans)!important}
+.ace_search_field{background:var(--shell)!important;color:var(--ink)!important;border:1px solid var(--border)!important;border-radius:3px!important}
+.ace_searchbtn,.ace_replacebtn,.ace_searchbtn_close{background:var(--shell)!important;color:var(--ink)!important;border:1px solid var(--border)!important;border-radius:3px!important}
+:root[data-theme="dark"] .ace_searchbtn.prev,:root[data-theme="dark"] .ace_searchbtn.next,:root[data-theme="dark"] .ace_searchbtn.all{filter:invert(.88)}
 
-<body>
-    <div id="app-container">
-        <div id="header">
-            <h1>Ultimate HTML Editor</h1>
-            <div class="header-buttons">
-                <button id="themeToggle" class="btn">
-                    <i class="fas fa-moon"></i> Theme
-                </button>
-                <button id="runButton" class="btn">
-                    <i class="fas fa-play"></i> Run
-                </button>
-            </div>
-        </div>
-        
-        <div id="view">
-             <button id="mobile-menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div id="sidebar">
-                <h2 class="sidebar-header">Editor Tools</h2>
-                <div id="editor-tools">
-                    <button id="fullPreviewBtn" class="tool-btn">
-                        <i class="fas fa-external-link-alt"></i> Full Preview
-                    </button>
-                    <button id="formatCodeBtn" class="tool-btn">
-                        <i class="fas fa-indent"></i> Format Code
-                    </button>
-                    <button id="toggleLayoutBtn" class="tool-btn">
-                        <i class="fas fa-exchange-alt"></i> Toggle Layout
-                    </button>
-                    <button id="insertSampleBtn" class="tool-btn">
-                        <i class="fas fa-file-code"></i> Insert Sample
-                    </button>
-                    <button id="clearEditorBtn" class="tool-btn">
-                        <i class="far fa-file"></i> Clear Editor
-                    </button>
-                    <button id="importHTMLBtn" class="tool-btn">
-                        <i class="fas fa-upload"></i> Import HTML
-                    </button>
-                    <button id="exportHTMLBtn" class="tool-btn">
-                        <i class="fas fa-download"></i> Export HTML
-                    </button>
-                    <button id="fullscreenBtn" class="tool-btn">
-                        <i class="fas fa-expand"></i> Fullscreen
-                    </button>
-                    <input type="file" id="fileInput" accept=".html,.htm,.txt" style="display:none">
-                </div>
-                <div class="copyright">
-                    © 2025 Ultimate HTML Editor<br>
-                    Works offline<br>
-                    Ctrl+Enter to Run
-                </div>
-            </div>
-            
-            <div id="main-content">
-                <div id="split-container">
-                    <div class="panel">
-                        <div class="panel-header">
-                            <span class="panel-title">Editor</span>
-                            <div class="panel-actions">
-                                <button id="increaseFontBtn" class="panel-action-btn" title="Increase font size">
-                                    <i class="fas fa-search-plus"></i>
-                                </button>
-                                <button id="decreaseFontBtn" class="panel-action-btn" title="Decrease font size">
-                                    <i class="fas fa-search-minus"></i>
-                                </button>
-                                <button id="wordWrapBtn" class="panel-action-btn" title="Toggle word wrap">
-                                    <i class="fas fa-text-width"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="panel-content">
-                            <textarea id="editor"><!DOCTYPE html>
-<html>
-<head>
-    <title>My HTML Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1 {
-            color: #04AA6D;
-            text-align: center;
-        }
-        button {
-            background-color: #04AA6D;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #059862;
-        }
-    </style>
+@media (max-width:767px){
+  #sidebar{position:fixed;inset:0 auto 0 0;width:260px;transform:translateX(-100%);transition:transform .2s;box-shadow:2px 0 14px rgba(0,0,0,.5);z-index:1050}
+  #sidebar.open{transform:none}
+  #backdrop.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1040}
+  #closeMenu{display:block}
+  #tabs{display:flex}
+  #separ{display:none}
+  #main.t-code #previewWrap,#main.t-preview #editorWrap{display:none}
+  #main.t-code #editorWrap,#main.t-preview #previewWrap{flex:1}
+  .tool kbd{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to the HTML Editor</h1>
-        <p>Edit this HTML to see live changes in the preview panel.</p>
-        <button onclick="alert('Hello World!')">Click Me</button>
+<div id="app">
+  <aside id="sidebar" aria-label="Toolbar">
+    <div class="brand">
+      <div><a href="./">HTML Online Viewer</a><small>Edit HTML and see it render as you type.</small></div>
+      <button id="closeMenu" aria-label="Close menu">&times;</button>
     </div>
-</body>
-</html></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="panel">
-                        <div class="panel-header">
-                            <span class="panel-title">Live Preview</span>
-                            <div class="panel-actions">
-                                <button id="refreshPreviewBtn" class="panel-action-btn" title="Refresh preview">
-                                    <i class="fas fa-sync-alt"></i>
-                                </button>
-                                <button id="openInNewTabBtn" class="panel-action-btn" title="Open in new tab">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="panel-content">
-                            <iframe id="preview-frame" title="Live HTML Preview" sandbox="allow-scripts allow-modals allow-forms allow-same-origin"></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="group">
+      <button class="tool primary" data-act="preview">Preview (full page)<kbd>Alt 1</kbd></button>
+      <button class="tool" data-act="highlight">Highlight (full page)<kbd>Alt 2</kbd></button>
     </div>
-
-    <!-- CodeMirror JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closetag.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/xml-fold.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/display/autorefresh.min.js"></script>
-    
-    <!-- Split.js for resizable panels -->
-    <script src="https://cdn.jsdelivr.net/npm/split.js@1.6.5/dist/split.min.js"></script>
-    
-    <!-- JS Beautifier -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
-        
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Initialize CodeMirror editor
-        const editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-            mode: 'htmlmixed',
-            theme: 'dracula',
-            lineNumbers: true,
-            autoCloseTags: true,
-            autoCloseBrackets: true,
-            foldGutter: true,
-            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-            lineWrapping: false,
-            indentUnit: 4,
-            tabSize: 4,
-            extraKeys: {
-                "Ctrl-Enter": updatePreview,
-                "Ctrl-Space": "autocomplete",
-                "Ctrl-/": "toggleComment",
-                "Ctrl-Alt-F": formatCode,
-                "Ctrl-S": (cm) => { 
-                    exportHTML();
-                    return false;
-                }
-            },
-            autoRefresh: true
-        });
-
-        // --- DOM Element References ---
-        const appContainer = document.getElementById('app-container');
-        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const previewFrame = document.getElementById('preview-frame');
-        const fileInput = document.getElementById('fileInput');
-
-        // --- Split View Setup ---
-        let splitInstance;
-        let isHorizontal = window.innerWidth > 768;
-
-        function setupSplitView() {
-            if (splitInstance) {
-                splitInstance.destroy();
-            }
-            
-            const panels = ['#split-container > .panel:nth-child(1)', '#split-container > .panel:nth-child(2)'];
-            document.getElementById('split-container').style.flexDirection = isHorizontal ? 'row' : 'column';
-            const gutter = document.querySelector('.gutter');
-            if(gutter) gutter.style.display = '';
-
-            splitInstance = Split(panels, {
-                sizes: [50, 50],
-                minSize: 100,
-                gutterSize: 8,
-                cursor: isHorizontal ? 'col-resize' : 'row-resize',
-                direction: isHorizontal ? 'horizontal' : 'vertical'
-            });
-        }
-        
-        // --- Core Editor Functions ---
-
-        function updatePreview() {
-            const code = editor.getValue();
-            const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-            
-            previewDoc.open();
-            previewDoc.write(code);
-            previewDoc.close();
-        }
-
-        function openFullPreview() {
-            const code = editor.getValue();
-            const blob = new Blob([code], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-            URL.revokeObjectURL(url); // Clean up the object URL
-        }
-
-        function formatCode() {
-            const unformatted = editor.getValue();
-            // *** THIS IS THE MAIN FIX ***
-            // The function is js_beautify.html, not html_beautify
-            const formatted = js_beautify.html(unformatted, {
-                indent_size: 4,
-                indent_char: ' ',
-                max_preserve_newlines: 2,
-                preserve_newlines: true,
-                indent_scripts: 'normal',
-                brace_style: 'collapse',
-                wrap_line_length: 0
-            });
-            editor.setValue(formatted);
-        }
-
-        function insertSample() {
-            const sampleCode = `<!DOCTYPE html>
-<html>
-<head>
-    <title>Responsive Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
-        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        h1 { color: #04AA6D; }
-    </style>
-</head>
-<body>
-    <h1>Sample Responsive Page</h1>
-    <div class="card">
-        <h2>Card 1</h2>
-        <p>This is some sample content. Edit the HTML to see it change!</p>
-        <button onclick="alert('Hello from Card 1!')">Click Me</button>
+    <div class="group">
+      <button class="tool" data-act="format">Format<kbd>Alt 3</kbd></button>
+      <button class="tool" data-act="find">Find<kbd>Ctrl F</kbd></button>
+      <button class="tool" data-act="replace">Find &amp; replace<kbd>Ctrl H</kbd></button>
+      <button class="tool" data-act="expand">Expand all<kbd>Alt 4</kbd></button>
+      <button class="tool" data-act="collapse">Collapse all<kbd>Alt 5</kbd></button>
     </div>
-</body>
-</html>`;
-            editor.setValue(sampleCode);
-        }
+    <div class="group">
+      <button class="tool" data-act="sample">Sample<kbd>Alt 6</kbd></button>
+      <button class="tool" data-act="clear">Clear<kbd>Alt 7</kbd></button>
+      <button class="tool" data-act="import">Import from file</button>
+      <button class="tool" data-act="export">Export to file</button>
+    </div>
+    <div class="group">
+      <button class="tool" id="themeBtn" data-act="theme">Light mode</button>
+      <button class="tool" data-act="about">About</button>
+    </div>
+    <div class="side-foot"><span class="dot"></span>Runs in your browser. Nothing is uploaded.</div>
+  </aside>
+  <div id="backdrop"></div>
 
-        function clearEditor() {
-            if (confirm('Are you sure you want to clear the editor?')) {
-                editor.setValue('');
-            }
-        }
+  <main id="main" class="t-code">
+    <div id="tabs" role="tablist">
+      <button id="menuBtn" aria-label="Open menu">Menu</button>
+      <button class="on" data-tab="code" role="tab" aria-selected="true">Code</button>
+      <button data-tab="preview" role="tab" aria-selected="false">Preview</button>
+    </div>
+    <section id="editorWrap">
+      <div class="bar"><span class="chip">index.html</span><span class="sp"></span><span id="stat"></span></div>
+      <div id="editorBox"><div id="editor"></div></div>
+    </section>
+    <div id="separ" role="separator" aria-orientation="horizontal" aria-label="Resize editor and preview" tabindex="0"></div>
+    <section id="previewWrap">
+      <div class="bar"><span>Live preview</span><span class="sp"></span><span class="live"><span class="dot"></span>sandboxed</span></div>
+      <iframe id="liveFrame" title="Live HTML preview" srcdoc="" sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-scripts"></iframe>
+    </section>
+  </main>
+</div>
 
-        function importHTML() {
-            fileInput.onchange = e => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = event => {
-                    editor.setValue(event.target.result);
-                };
-                reader.onerror = () => {
-                    alert('Error reading file');
-                };
-                reader.readAsText(file);
-                fileInput.value = ''; // Reset for next import
-            };
-            fileInput.click();
-        }
+<div id="cover" aria-hidden="true"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" accept="text/*,.html,.htm,.txt" hidden>
 
-        function exportHTML() {
-            const code = editor.getValue();
-            const blob = new Blob([code], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'document.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+<dialog id="about" aria-labelledby="aboutT">
+  <div class="d-head"><h2 id="aboutT">About</h2><button class="d-close" id="aboutX">Close</button></div>
+  <div class="d-body">
+    <p><strong>HTML Online Viewer</strong> is a free HTML editor, formatter and viewer with an instant live preview. Paste or type markup, and the sandboxed preview updates as you go. Format, search, replace, fold, import and export, with nothing to install.</p>
+    <h3>Keyboard shortcuts</h3>
+    <ul>
+      <li><kbd>Alt</kbd> <kbd>1</kbd> Preview in a new tab</li>
+      <li><kbd>Alt</kbd> <kbd>2</kbd> Highlighted source in a new tab</li>
+      <li><kbd>Alt</kbd> <kbd>3</kbd> Format</li>
+      <li><kbd>Alt</kbd> <kbd>4</kbd> Expand all, <kbd>Alt</kbd> <kbd>5</kbd> Collapse all</li>
+      <li><kbd>Alt</kbd> <kbd>6</kbd> Sample, <kbd>Alt</kbd> <kbd>7</kbd> Clear</li>
+      <li><kbd>Ctrl</kbd> <kbd>F</kbd> Find, <kbd>Ctrl</kbd> <kbd>H</kbd> Find and replace</li>
+    </ul>
+    <h3>Privacy</h3>
+    <p>Everything is processed locally in your browser. Your code is kept in local storage so it survives a reload, and never sent to a server.</p>
+    <h3>Credits</h3>
+    <ul>
+      <li><a href="https://ace.c9.io/" target="_blank" rel="noopener">Ace Editor</a> (BSD 3-Clause)</li>
+      <li><a href="https://highlightjs.org/" target="_blank" rel="noopener">highlight.js</a> (BSD 3-Clause)</li>
+      <li><a href="https://github.com/beautifier/js-beautify" target="_blank" rel="noopener">JS Beautify</a> (MIT)</li>
+    </ul>
+  </div>
+</dialog>
 
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                appContainer.requestFullscreen().catch(err => {
-                    alert(`Error attempting to enable fullscreen: ${err.message} (${err.name})`);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        }
-        
-        document.addEventListener('fullscreenchange', () => {
-            appContainer.classList.toggle('fullscreen', !!document.fullscreenElement);
-        });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-language_tools.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-searchbox.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.4/beautify-html.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(function(){
+'use strict';
+var LS_T='hov.text',LS_TH='hov.theme',PH='Put your HTML text here';
+var $=function(i){return document.getElementById(i)};
+var editor,frame=$('liveFrame'),pT,sT,tT,SAMPLE;
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function toast(m){var e=$('toast');e.textContent=m;e.classList.add('show');clearTimeout(tT);tT=setTimeout(function(){e.classList.remove('show')},2200)}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function pt(e){var t=(e.touches&&e.touches[0])||(e.changedTouches&&e.changedTouches[0])||e;return{y:t.clientY}}
+function openTab(h){var u=URL.createObjectURL(new Blob([h],{type:'text/html;charset=utf-8'})),a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},15000)}
+function dark(){return document.documentElement.getAttribute('data-theme')==='dark'}
 
-        function changeFontSize(change) {
-            const wrapper = editor.getWrapperElement();
-            const currentSize = parseInt(window.getComputedStyle(wrapper).fontSize) || 14;
-            const newSize = Math.max(10, Math.min(24, currentSize + change));
-            wrapper.style.fontSize = newSize + 'px';
-            editor.refresh(); // Important for CodeMirror to recalculate layout
-            localStorage.setItem('editorFontSize', newSize);
-        }
+/* editor */
+function stat(){if(!editor)return;var v=editor.getValue();$('stat').textContent=editor.session.getLength()+' lines, '+v.length+' chars'}
+function preview(){if(editor)frame.srcdoc=editor.getValue()}
+function initEditor(){
+  if(typeof ace==='undefined'){$('editor').innerHTML='<p style="padding:16px;font:13px var(--mono);color:var(--warn)">The code editor could not load. Check your connection.</p>';return}
+  editor=ace.edit('editor');
+  editor.setOptions({enableBasicAutocompletion:true,enableLiveAutocompletion:true,enableSnippets:true,showPrintMargin:false,wrap:true,fontSize:'14px',fontFamily:'"JetBrains Mono",Consolas,Menlo,monospace',useSoftTabs:true,tabSize:2,displayIndentGuides:true,showFoldWidgets:true,highlightActiveLine:true});
+  editor.session.setMode('ace/mode/html');
+  var s=ls(LS_T);editor.setValue(s?s:PH,-1);editor.clearSelection();
+  editor.on('change',function(){clearTimeout(pT);pT=setTimeout(preview,300);clearTimeout(sT);sT=setTimeout(function(){ls(LS_T,editor.getValue())},400);stat()});
+  window.addEventListener('resize',function(){editor.resize()});
+}
 
-        function toggleWordWrap() {
-            const newValue = !editor.getOption('lineWrapping');
-            editor.setOption('lineWrapping', newValue);
-            localStorage.setItem('editorWordWrap', newValue);
-            document.getElementById('wordWrapBtn').title = newValue ? 'Disable word wrap' : 'Enable word wrap';
-        }
+/* actions */
+function find(){if(!editor)return;editor.focus();editor.execCommand('find')}
+function replace(){if(!editor)return;editor.focus();editor.execCommand('replace')}
+function fold(){if(editor)editor.session.foldAll()}
+function unfold(){if(editor)editor.session.unfold()}
+function openPreview(){if(!editor)return;openTab(editor.getValue());toast('Opened preview in a new tab')}
+function openHighlight(){
+  if(!editor)return;var c=editor.getValue(),h=esc(c);
+  try{h=hljs.highlight(c,{language:'xml',ignoreIllegals:true}).value}catch(e){}
+  var d=dark(),bg=d?'#1D2021':'#fff',fg=d?'#FBF1C7':'#222',cm=d?'#878B86':'#6b7280',tg=d?'#00FF88':'#00875A',at=d?'#F6833B':'#B4460C',st=d?'#9CA49C':'#3b6b3b';
+  openTab('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Highlighted HTML</title><style>html,body{margin:0;background:'+bg+';color:'+fg+'}pre{margin:0;padding:18px;overflow:auto}code{font:13px/1.6 "JetBrains Mono",Consolas,Menlo,monospace;white-space:pre}.hljs-tag,.hljs-name{color:'+tg+'}.hljs-attr{color:'+at+'}.hljs-string{color:'+st+'}.hljs-comment,.hljs-meta{color:'+cm+';font-style:italic}.hljs-keyword{color:'+at+'}</style></head><body><pre><code>'+h+'</code></pre></body></html>');
+  toast('Opened highlighted source in a new tab');
+}
+function format(){
+  if(!editor)return;if(typeof html_beautify!=='function'){toast('Formatter is not available');return}
+  var pos=editor.getCursorPosition(),st=editor.session.getScrollTop(),v=editor.getValue(),f;
+  try{f=html_beautify(v,{indent_size:2,wrap_line_length:0,preserve_newlines:true,end_with_newline:true})}catch(e){toast('Could not format the HTML');return}
+  if(f===v){toast('Already formatted');return}
+  editor.setValue(f,-1);try{editor.moveCursorToPosition(pos);editor.clearSelection()}catch(e){}
+  editor.session.setScrollTop(st);preview();toast('Formatted');
+}
+SAMPLE=['<!DOCTYPE html>','<html lang="en">','<head>','  <meta charset="utf-8">','  <meta name="viewport" content="width=device-width, initial-scale=1">','  <title>Sample page</title>','  <style>','    body { font-family: system-ui, sans-serif; margin: 0; padding: 24px; background: #f7f9fc; color: #222; }','    h1 { color: #2b6cb0; margin-top: 0; }','    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; max-width: 520px; }','    table { border-collapse: collapse; width: 100%; max-width: 520px; margin: 16px 0; }','    th, td { border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left; }','    th { background: #edf2f7; }','    button { background: #2b6cb0; color: #fff; border: 0; border-radius: 6px; padding: 8px 14px; cursor: pointer; }','  </style>','</head>','<body>','  <h1>Hello, HTML Online Viewer</h1>','  <p>This page renders live inside a sandboxed iframe.</p>','  <div class="card">','    <p>Edit the code and watch this update.</p>','    <button type="button" onclick="document.getElementById(\'msg\').textContent = \'Clicked at \' + new Date().toLocaleTimeString();">Click me</button>','    <p id="msg"></p>','  </div>','  <table>','    <tr><th>Feature</th><th>Status</th></tr>','    <tr><td>Live preview</td><td>Yes</td></tr>','    <tr><td>Formatting</td><td>Yes</td></tr>','  </table>','</body>','</html>'].join('\n');
+function sample(){if(!editor)return;var c=editor.getValue().trim();if(c&&c!==PH&&!confirm('Replace the current content with the sample HTML?'))return;editor.setValue(SAMPLE,-1);editor.clearSelection();preview();toast('Sample inserted')}
+function clearAll(){if(!editor||!confirm('Clear the editor and the preview?'))return;editor.setValue('',-1);preview();ls(LS_T,'');toast('Content cleared')}
+function imp(){var f=$('fileInput');f.value='';f.click()}
+$('fileInput').addEventListener('change',function(e){
+  var i=e.target,f=i.files&&i.files[0];if(!f)return;var r=new FileReader();
+  r.onload=function(ev){if(editor){editor.setValue(String(ev.target.result||''),-1);editor.clearSelection();preview()}toast('Imported '+f.name);i.value=''};
+  r.onerror=function(){toast('Could not read file');i.value=''};r.readAsText(f);
+});
+function exp(){
+  var u=URL.createObjectURL(new Blob([editor?editor.getValue():''],{type:'text/html;charset=utf-8'})),a=document.createElement('a');
+  a.href=u;a.download='index.html';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},5000);toast('Exported index.html');
+}
+function theme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  if(editor)editor.setTheme(t==='dark'?'ace/theme/tomorrow_night':'ace/theme/textmate');
+  $('themeBtn').textContent=t==='dark'?'Light mode':'Dark mode';ls(LS_TH,t);
+}
+function about(){var d=$('about');if(d.showModal)d.showModal();else d.setAttribute('open','')}
+$('aboutX').onclick=function(){$('about').close()};
 
-        function toggleTheme() {
-            const isDark = document.body.classList.toggle('dark-theme');
-            editor.setOption('theme', isDark ? 'dracula' : 'default');
-            localStorage.setItem('editorTheme', isDark ? 'dark' : 'light');
-        }
-        
-        function toggleOrientation() {
-            isHorizontal = !isHorizontal;
-            setupSplitView();
-        }
-        
-        function debounce(func, wait) {
-            let timeout;
-            return function(...args) {
-                const context = this;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(context, args), wait);
-            };
-        }
+var ACT={preview:openPreview,highlight:openHighlight,format:format,find:find,replace:replace,expand:unfold,collapse:fold,sample:sample,clear:clearAll,import:imp,export:exp,about:about,theme:function(){theme(dark()?'light':'dark')}};
+Array.prototype.forEach.call(document.querySelectorAll('[data-act]'),function(b){
+  b.addEventListener('click',function(){closeMenu();ACT[b.dataset.act]()});
+});
 
-        function loadPreferences() {
-            if (localStorage.getItem('editorTheme') === 'dark') {
-                document.body.classList.add('dark-theme');
-                editor.setOption('theme', 'dracula');
-            } else {
-                 document.body.classList.remove('dark-theme');
-                 editor.setOption('theme', 'default');
-            }
+/* shortcuts */
+var KEYS={1:openPreview,2:openHighlight,3:format,4:unfold,5:fold,6:sample,7:clearAll};
+document.addEventListener('keydown',function(e){
+  if($('about').open)return;
+  if(e.altKey&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){
+    var m=/^(?:Digit|Numpad)([1-7])$/.exec(e.code||'');var n=m?m[1]:(/^[1-7]$/.test(e.key)?e.key:null);
+    if(n){e.preventDefault();KEYS[n]();return}
+  }
+  var k=(e.key||'').toLowerCase(),inEd=e.target.closest&&e.target.closest('#editor');
+  if(!inEd&&!e.altKey&&!e.shiftKey&&((k==='f'&&(e.ctrlKey||e.metaKey))||(k==='h'&&e.ctrlKey))){
+    var t=e.target.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+    e.preventDefault();k==='f'?find():replace();
+  }
+},true);
 
-            const savedFontSize = localStorage.getItem('editorFontSize');
-            if (savedFontSize) {
-                editor.getWrapperElement().style.fontSize = savedFontSize + 'px';
-                editor.refresh();
-            }
+/* splitter */
+(function(){
+  var sep=$('separ'),cov=$('cover'),ew=$('editorWrap'),mn=$('main'),drag=false,y0=0,h0=0,max=0,raf=0,ph=0;
+  var mob=function(){return matchMedia('(max-width:767px)').matches};
+  function start(e){if(mob())return;e.preventDefault();drag=true;y0=pt(e).y;h0=ew.getBoundingClientRect().height;max=mn.clientHeight-90-7;cov.classList.add('on');sep.classList.add('drag');document.body.style.userSelect='none'}
+  function move(e){if(!drag)return;e.preventDefault();ph=Math.max(90,Math.min(max,h0+pt(e).y-y0));if(raf)return;raf=requestAnimationFrame(function(){raf=0;ew.style.flex='0 0 '+ph+'px';if(editor)editor.resize()})}
+  function end(){if(!drag)return;drag=false;cov.classList.remove('on');sep.classList.remove('drag');document.body.style.userSelect='';if(editor)editor.resize()}
+  sep.addEventListener('mousedown',start);document.addEventListener('mousemove',move);document.addEventListener('mouseup',end);
+  sep.addEventListener('touchstart',start,{passive:false});document.addEventListener('touchmove',move,{passive:false});document.addEventListener('touchend',end);document.addEventListener('touchcancel',end);
+  sep.addEventListener('keydown',function(e){
+    if(e.key!=='ArrowUp'&&e.key!=='ArrowDown')return;e.preventDefault();
+    var h=Math.max(90,Math.min(mn.clientHeight-97,ew.getBoundingClientRect().height+(e.key==='ArrowDown'?24:-24)));
+    ew.style.flex='0 0 '+h+'px';if(editor)editor.resize();
+  });
+})();
 
-            if (localStorage.getItem('editorWordWrap') === 'true') {
-                editor.setOption('lineWrapping', true);
-                document.getElementById('wordWrapBtn').title = 'Disable word wrap';
-            }
-        }
+/* mobile */
+function openMenu(){$('sidebar').classList.add('open');$('backdrop').classList.add('show')}
+function closeMenu(){$('sidebar').classList.remove('open');$('backdrop').classList.remove('show')}
+$('menuBtn').onclick=openMenu;$('closeMenu').onclick=closeMenu;$('backdrop').onclick=closeMenu;
+var tabs=document.querySelectorAll('[data-tab]');
+Array.prototype.forEach.call(tabs,function(t){t.addEventListener('click',function(){
+  var w=t.dataset.tab,m=$('main');m.classList.toggle('t-code',w==='code');m.classList.toggle('t-preview',w==='preview');
+  Array.prototype.forEach.call(tabs,function(x){var on=x===t;x.classList.toggle('on',on);x.setAttribute('aria-selected',on)});
+  if(w==='code'&&editor)setTimeout(function(){editor.resize()},30);
+})});
 
-        // --- Event Listeners ---
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        document.getElementById('runButton').addEventListener('click', updatePreview);
-        document.getElementById('fullPreviewBtn').addEventListener('click', openFullPreview);
-        document.getElementById('formatCodeBtn').addEventListener('click', formatCode);
-        document.getElementById('toggleLayoutBtn').addEventListener('click', toggleOrientation);
-        document.getElementById('insertSampleBtn').addEventListener('click', insertSample);
-        document.getElementById('clearEditorBtn').addEventListener('click', clearEditor);
-        document.getElementById('importHTMLBtn').addEventListener('click', importHTML);
-        document.getElementById('exportHTMLBtn').addEventListener('click', exportHTML);
-        document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
-        document.getElementById('refreshPreviewBtn').addEventListener('click', updatePreview);
-        document.getElementById('openInNewTabBtn').addEventListener('click', openFullPreview);
-        document.getElementById('increaseFontBtn').addEventListener('click', () => changeFontSize(1));
-        document.getElementById('decreaseFontBtn').addEventListener('click', () => changeFontSize(-1));
-        document.getElementById('wordWrapBtn').addEventListener('click', toggleWordWrap);
-        
-        mobileMenuToggle.addEventListener('click', (e) => {
-            e.stopPropagation(); // prevent document click listener from closing it immediately
-            sidebar.classList.toggle('open');
-        });
-
-        window.addEventListener('resize', debounce(() => {
-            const shouldBeHorizontal = window.innerWidth > 768;
-            if (shouldBeHorizontal !== isHorizontal) {
-                isHorizontal = shouldBeHorizontal;
-                setupSplitView();
-            }
-        }, 150));
-        
-        document.addEventListener('click', (e) => {
-            if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
-                 sidebar.classList.remove('open');
-            }
-        });
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key.toLowerCase() === 's') {
-                e.preventDefault();
-                exportHTML();
-            }
-        });
-        
-        editor.on('change', debounce(updatePreview, 400));
-        
-        // --- Initial Load ---
-        setupSplitView();
-        loadPreferences();
-        updatePreview();
-        editor.focus();
-    });
-    </script>
+/* init */
+initEditor();
+theme(ls(LS_TH)==='light'?'light':'dark');
+window.addEventListener('beforeunload',function(){if(editor)ls(LS_T,editor.getValue())});
+preview();stat();
+setTimeout(function(){if(editor)editor.resize()},60);
+})();
+</script>
 </body>
 </html>
